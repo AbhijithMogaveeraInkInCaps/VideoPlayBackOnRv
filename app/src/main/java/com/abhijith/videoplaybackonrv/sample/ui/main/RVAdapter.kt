@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.abhijith.videoplaybackonrv.R
@@ -20,6 +21,7 @@ class RVAdapter : RecyclerView.Adapter<RVAdapter.VH>() {
     class VH(v: View) : RecyclerView.ViewHolder(v), ViewHolderExtension {
 
         val vp = v.findViewById<PlayableItemsRecyclerView>(R.id.vp2)
+        var tv = v.findViewById<TextView>(R.id.ct)
         var pos = -1
 
         override fun action(extensionInfo: ExtensionInfo) {
@@ -50,6 +52,7 @@ class RVAdapter : RecyclerView.Adapter<RVAdapter.VH>() {
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.vp?.apply {
             holder.pos = position
+            holder.tv.text = position.toString()
             setPlaybackTriggeringStates(
                     PlayableItemsContainer.PlaybackTriggeringState.IDLING,
                     PlayableItemsContainer.PlaybackTriggeringState.DRAGGING
@@ -70,7 +73,7 @@ class RVAdapter : RecyclerView.Adapter<RVAdapter.VH>() {
     }
 
     override fun getItemCount(): Int {
-        return 10
+        return 200
     }
 }
 
