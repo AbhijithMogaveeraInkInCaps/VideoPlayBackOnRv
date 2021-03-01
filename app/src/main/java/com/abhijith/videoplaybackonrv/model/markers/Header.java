@@ -10,7 +10,6 @@ import com.abhijith.videoplaybackonrv.listeners.OnItemClickListener;
  * To be implemented by the Items that need to be treated as Header.
  *
  * @param <VH> the view holder type
- * @author arthur3486
  */
 public interface Header<VH extends RecyclerView.ViewHolder> {
 

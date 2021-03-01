@@ -39,16 +39,12 @@ import com.google.android.exoplayer2.upstream.cache.SimpleCache;
  */
 public final class ExoPlayerUtils {
 
-
     /**
      * The default size of cache in bytes. (500MB in Bytes)
      */
     public static final long DEFAULT_CACHE_SIZE = (500 * 1024 * 1024);
 
     private static Cache sCache;
-
-
-
 
     /**
      * Creates/retrieves the {@link com.google.android.exoplayer2.ExoPlayer} {@link Cache} of the default

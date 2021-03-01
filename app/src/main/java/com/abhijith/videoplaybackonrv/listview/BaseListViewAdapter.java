@@ -49,24 +49,17 @@ public abstract class BaseListViewAdapter<IT extends BaseItem, VH extends BaseIt
 
     public BaseListViewAdapter(@NonNull Context context, @NonNull List<IT> items) {
         super(context, 0, items);
-
         Preconditions.nonNull(context);
         Preconditions.nonNull(items);
-
         mItems = items;
         mLayoutInflater = LayoutInflater.from(context);
         mOnDatasetChangeListeners = new HashSet<>();
     }
 
-
-
-
     @Override
     public final void addItem(@NonNull IT item) {
         addItem(item, true);
     }
-
-
 
 
     @Override
@@ -76,24 +69,15 @@ public abstract class BaseListViewAdapter<IT extends BaseItem, VH extends BaseIt
         addItem(mItems.size(), item, notifyAboutTheChange);
     }
 
-
-
-
     @Override
     public final void addItem(int position, @NonNull IT item) {
         addItem(position, item, true);
     }
 
-
-
-
     @Override
     public final void addOrUpdateItem(@NonNull IT item) {
         addOrUpdateItem(item, true);
     }
-
-
-
 
     @Override
     public final void addOrUpdateItem(@NonNull IT item, boolean notifyAboutTheChange) {
@@ -101,9 +85,6 @@ public abstract class BaseListViewAdapter<IT extends BaseItem, VH extends BaseIt
 
         addOrUpdateItem(mItems.size(), item, notifyAboutTheChange);
     }
-
-
-
 
     @Override
     public final void addOrUpdateItem(int position, @NonNull IT item) {

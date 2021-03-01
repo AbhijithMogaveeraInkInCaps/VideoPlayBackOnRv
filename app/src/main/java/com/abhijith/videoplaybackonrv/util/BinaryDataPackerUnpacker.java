@@ -1,8 +1,5 @@
 package com.abhijith.videoplaybackonrv.util;
 
-/**
- * Created by paul
- */
 public final class BinaryDataPackerUnpacker {
 
 

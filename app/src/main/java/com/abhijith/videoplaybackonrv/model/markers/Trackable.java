@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
  * A marker class that's to be implemented by the Items that need to be made "unique" within the Trackable Adapters.
  *
  * @param <KT> key type (e.g. {@link Integer}, {@link String}, etc.)
- * @author arthur3486
  */
 public interface Trackable<KT> {
 

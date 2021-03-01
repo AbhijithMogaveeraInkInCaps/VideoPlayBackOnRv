@@ -24,7 +24,6 @@ import androidx.annotation.Nullable;
  * @param <KT> the item key type
  * @param <IT> the item type
  * @param <VH> the item view holder type
- * @author arthur3486
  */
 public abstract class TrackableListViewAdapter<KT, IT extends BaseItem, VH extends BaseItem.ViewHolder<?>> extends BaseListViewAdapter<IT, VH> {
 

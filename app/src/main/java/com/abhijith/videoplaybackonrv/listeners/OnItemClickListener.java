@@ -6,7 +6,6 @@ import android.view.View;
  * A contract-interface for the observation of the dataset item click events.
  *
  * @param <T> the item type
- * @author arthur3486
  */
 public interface OnItemClickListener<T> {
 

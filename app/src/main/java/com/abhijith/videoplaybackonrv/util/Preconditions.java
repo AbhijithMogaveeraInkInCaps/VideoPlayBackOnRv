@@ -8,20 +8,11 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 
-/**
- * @author arthur3486
- */
 public final class Preconditions {
-
-
-
 
     public static void isTrue(boolean condition) {
         isTrue("Condition", condition);
     }
-
-
-
 
     public static void isTrue(@NonNull String info, boolean condition) {
         nonNull(info);

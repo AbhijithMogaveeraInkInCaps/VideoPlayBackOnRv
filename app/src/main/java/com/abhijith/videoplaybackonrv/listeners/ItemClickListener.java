@@ -6,7 +6,6 @@ import android.view.View;
  * A convenience class used for the encapsulation and handling of the {@link OnItemClickListener}.
  *
  * @param <T> the item type
- * @author arthur3486
  */
 public class ItemClickListener<T> implements View.OnClickListener {
 

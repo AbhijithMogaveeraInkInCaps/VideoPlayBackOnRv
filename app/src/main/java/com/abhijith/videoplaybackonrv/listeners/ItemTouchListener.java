@@ -7,7 +7,6 @@ import android.view.View;
  * A convenience class used for the encapsulation and handling of the {@link OnItemTouchListener}
  *
  * @param <T> the item type
- * @author arthur3486
  */
 public class ItemTouchListener<T> implements View.OnTouchListener {
 

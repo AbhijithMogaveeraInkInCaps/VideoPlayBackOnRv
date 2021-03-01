@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
  *
  * @param <VH> View Holder
  *
- * @author arthur3486
  */
 public interface SupportsHeader<VH extends RecyclerView.ViewHolder> {
 

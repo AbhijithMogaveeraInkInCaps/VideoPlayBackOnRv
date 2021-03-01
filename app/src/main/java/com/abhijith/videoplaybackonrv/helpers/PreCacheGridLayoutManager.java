@@ -14,26 +14,17 @@ public class PreCacheGridLayoutManager extends GridLayoutManager implements HasP
 
     private int extraLayoutSpace = -1;
 
-
-
-
     public PreCacheGridLayoutManager(Context context, int spanCount) {
         super(context, spanCount);
     }
 
-
-
-
-    public PreCacheGridLayoutManager(Context context,
-                                     int spanCount,
-                                     int orientation,
-                                     boolean reverseLayout) {
-        super(
-            context,
-            spanCount,
-            orientation,
-            reverseLayout
-        );
+    public PreCacheGridLayoutManager(
+            Context context,
+            int spanCount,
+            int orientation,
+            boolean reverseLayout
+    ) {
+        super(context, spanCount, orientation, reverseLayout);
     }
 
 

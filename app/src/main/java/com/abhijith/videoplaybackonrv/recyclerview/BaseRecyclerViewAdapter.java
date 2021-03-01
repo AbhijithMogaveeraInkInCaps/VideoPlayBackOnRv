@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView;
  *
  * @param <IT> the dataset item type
  * @param <VH> the item view holder type
- * @author arthur3486
  */
 public abstract class BaseRecyclerViewAdapter<IT extends BaseItem, VH extends BaseItem.ViewHolder<?>> extends RecyclerView.Adapter<VH> implements Adapter<IT>,
         SupportsHeader<VH>, SupportsFooter<VH> {

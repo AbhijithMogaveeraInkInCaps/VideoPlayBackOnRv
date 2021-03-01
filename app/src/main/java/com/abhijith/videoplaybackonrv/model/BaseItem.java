@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
  * @param <IM> item model type
  * @param <VH> view holder type
  * @param <IR> reusable resources type
- * @author arthur3486
  */
 public abstract class BaseItem<IM, VH extends BaseItem.ViewHolder<IM>, IR extends ItemResources> implements Item<VH, IR> {
 

@@ -10,7 +10,6 @@ import java.util.List;
  *
  * @param <DS> dataset type
  * @param <IT> item type
- * @author arthur3486
  */
 public interface OnDatasetChangeListener<DS extends List<IT>, IT> {
 

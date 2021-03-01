@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
  *
  * @param <VH> item view holder type
  * @param <IR> reusable resources type
- * @author arthur3486
  */
 public interface Item<VH extends RecyclerView.ViewHolder, IR extends ItemResources> extends Serializable {
 
