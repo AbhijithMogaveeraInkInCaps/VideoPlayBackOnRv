@@ -16,66 +16,49 @@ import static com.abhijith.videoplaybackonrv.util.misc.CollectionUtils.toHashSet
 
 /**
  * A concrete implementation of the {@link com.abhijith.videoplaybackonrv.others.PlayerNodePool}, used to
- * manage the {@link com.abhijith.videoplaybackonrv.others.PlayerNode}s and corresponding {@link Player}s.
+ * manage the {@link PlayerNode}s and corresponding {@link Player}s.
  */
-final class ArviPlayerNodePool implements com.abhijith.videoplaybackonrv.others.PlayerNodePool {
-
+final class MyPlayerNodePool implements com.abhijith.videoplaybackonrv.others.PlayerNodePool {
 
     private final int maxSize;
 
-    private final Set<com.abhijith.videoplaybackonrv.others.PlayerNode> playerNodeSet;
-    private final Map<String, com.abhijith.videoplaybackonrv.others.PlayerNode> keyPlayerNodeMap;
+    private final Set<PlayerNode> playerNodeSet;
+    private final Map<String, PlayerNode> keyPlayerNodeMap;
 
-
-
-
-    ArviPlayerNodePool(int maxSize) {
+    MyPlayerNodePool(int maxSize) {
         Preconditions.isTrue("You must specify a valid Pool Max Size.", (maxSize >= 0));
-
         this.maxSize = maxSize;
         this.playerNodeSet = new HashSet<>();
         this.keyPlayerNodeMap = new HashMap<>();
     }
 
-
-
-
     @Override
-    public final void add(@NonNull com.abhijith.videoplaybackonrv.others.PlayerNode playerNode) {
+    public final void add(@NonNull PlayerNode playerNode) {
         Preconditions.nonNull(playerNode);
 
         this.playerNodeSet.add(playerNode);
         this.keyPlayerNodeMap.put(playerNode.getKey(), playerNode);
     }
 
-
-
-
     @Override
     public final void add(@NonNull String key, @NonNull Player player) {
         Preconditions.nonEmpty(key);
         Preconditions.nonNull(player);
 
-        add(new com.abhijith.videoplaybackonrv.others.PlayerNode(player).setKey(key));
+        add(new PlayerNode(player).setKey(key));
     }
 
-
-
-
     @Override
-    public final com.abhijith.videoplaybackonrv.others.PlayerNode remove(@NonNull com.abhijith.videoplaybackonrv.others.PlayerNode playerNode) {
+    public final PlayerNode remove(@NonNull PlayerNode playerNode) {
         Preconditions.nonNull(playerNode);
         return remove(playerNode.getKey());
     }
 
-
-
-
     @Override
-    public final com.abhijith.videoplaybackonrv.others.PlayerNode remove(@NonNull String key) {
+    public final PlayerNode remove(@NonNull String key) {
         Preconditions.nonEmpty(key);
 
-        final com.abhijith.videoplaybackonrv.others.PlayerNode playerNode = this.keyPlayerNodeMap.remove(key);
+        final PlayerNode playerNode = this.keyPlayerNodeMap.remove(key);
 
         if(playerNode != null) {
             this.playerNodeSet.remove(playerNode);
@@ -85,14 +68,11 @@ final class ArviPlayerNodePool implements com.abhijith.videoplaybackonrv.others.
         return playerNode;
     }
 
-
-
-
     @Override
     public final void unregister(@NonNull String key) {
         Preconditions.nonEmpty(key);
 
-        final com.abhijith.videoplaybackonrv.others.PlayerNode playerNode = get(key);
+        final PlayerNode playerNode = get(key);
 
         if(playerNode != null) {
             unbind(playerNode, false);
@@ -101,15 +81,12 @@ final class ArviPlayerNodePool implements com.abhijith.videoplaybackonrv.others.
         this.keyPlayerNodeMap.remove(key);
     }
 
-
-
-
     @Nullable
     @Override
-    public final com.abhijith.videoplaybackonrv.others.PlayerNode acquire(@NonNull String key) {
+    public final PlayerNode acquire(@NonNull String key) {
         Preconditions.nonEmpty(key);
 
-        final com.abhijith.videoplaybackonrv.others.PlayerNode freePlayerNode = acquireFree(key);
+        final PlayerNode freePlayerNode = acquireFree(key);
 
         if(freePlayerNode != null) {
             return freePlayerNode;
@@ -118,15 +95,12 @@ final class ArviPlayerNodePool implements com.abhijith.videoplaybackonrv.others.
         return acquireOldest(key);
     }
 
-
-
-
     @Nullable
     @Override
-    public final com.abhijith.videoplaybackonrv.others.PlayerNode acquireFree(@NonNull String key) {
+    public final PlayerNode acquireFree(@NonNull String key) {
         Preconditions.nonEmpty(key);
 
-        final com.abhijith.videoplaybackonrv.others.PlayerNode freePlayerNode = getFree();
+        final PlayerNode freePlayerNode = getFree();
 
         if(freePlayerNode != null) {
             freePlayerNode.setKey(key);
@@ -136,14 +110,11 @@ final class ArviPlayerNodePool implements com.abhijith.videoplaybackonrv.others.
         return freePlayerNode;
     }
 
-
-
-
     @Override
-    public final com.abhijith.videoplaybackonrv.others.PlayerNode acquireOldest(@NonNull String key) {
+    public final PlayerNode acquireOldest(@NonNull String key) {
         Preconditions.nonEmpty(key);
 
-        final com.abhijith.videoplaybackonrv.others.PlayerNode playerNode = getOldest();
+        final PlayerNode playerNode = getOldest();
 
         if(playerNode != null) {
             unbind(playerNode, false);
@@ -154,11 +125,8 @@ final class ArviPlayerNodePool implements com.abhijith.videoplaybackonrv.others.
         return playerNode;
     }
 
-
-
-
     @Override
-    public final void release(@NonNull com.abhijith.videoplaybackonrv.others.PlayerNode playerNode) {
+    public final void release(@NonNull PlayerNode playerNode) {
         Preconditions.nonNull(playerNode);
 
         unbind(playerNode, true);
@@ -169,38 +137,29 @@ final class ArviPlayerNodePool implements com.abhijith.videoplaybackonrv.others.
         }
     }
 
-
-
-
     @Override
     public final void release(@NonNull String key) {
         Preconditions.nonEmpty(key);
 
-        final com.abhijith.videoplaybackonrv.others.PlayerNode playerNode = get(key);
+        final PlayerNode playerNode = get(key);
 
         if(playerNode != null) {
             release(playerNode);
         }
     }
 
-
-
-
     @Override
     public final void release() {
-        for(com.abhijith.videoplaybackonrv.others.PlayerNode playerNode : toHashSet(this.playerNodeSet)) {
+        for(PlayerNode playerNode : toHashSet(this.playerNodeSet)) {
             release(playerNode);
         }
     }
 
-
-
-
     @Override
-    public final com.abhijith.videoplaybackonrv.others.PlayerNode get(@NonNull String key) {
+    public final PlayerNode get(@NonNull String key) {
         Preconditions.nonEmpty(key);
 
-        final com.abhijith.videoplaybackonrv.others.PlayerNode playerNode = this.keyPlayerNodeMap.get(key);
+        final PlayerNode playerNode = this.keyPlayerNodeMap.get(key);
 
         if(playerNode != null) {
             updateKey(playerNode, key);
@@ -209,12 +168,9 @@ final class ArviPlayerNodePool implements com.abhijith.videoplaybackonrv.others.
         return playerNode;
     }
 
-
-
-
     @Override
-    public final com.abhijith.videoplaybackonrv.others.PlayerNode getFree() {
-        for(com.abhijith.videoplaybackonrv.others.PlayerNode playerNode : this.playerNodeSet) {
+    public final PlayerNode getFree() {
+        for(PlayerNode playerNode : this.playerNodeSet) {
             if(playerNode.hasPlayer()
                 && !playerNode.getPlayer().isAttached()
                 && !playerNode.isKeySet()
@@ -226,25 +182,16 @@ final class ArviPlayerNodePool implements com.abhijith.videoplaybackonrv.others.
         return null;
     }
 
-
-
-
     @Override
-    public final com.abhijith.videoplaybackonrv.others.PlayerNode getOldest() {
-        final com.abhijith.videoplaybackonrv.others.PlayerNode playerNode = Collections.min(this.playerNodeSet);
+    public final PlayerNode getOldest() {
+        final PlayerNode playerNode = Collections.min(this.playerNodeSet);
         return ((playerNode != null) ? updateAccessTime(playerNode) : null);
     }
-
-
-
 
     @Override
     public final int getPlayerCount() {
         return this.playerNodeSet.size();
     }
-
-
-
 
     @Override
     public final boolean isFull() {
@@ -262,7 +209,7 @@ final class ArviPlayerNodePool implements com.abhijith.videoplaybackonrv.others.
 
 
 
-    private void unbind(com.abhijith.videoplaybackonrv.others.PlayerNode playerNode, boolean removeFromPool) {
+    private void unbind(PlayerNode playerNode, boolean removeFromPool) {
         final Player player = playerNode.getPlayer();
 
         if(player != null) {
@@ -279,24 +226,14 @@ final class ArviPlayerNodePool implements com.abhijith.videoplaybackonrv.others.
         }
     }
 
-
-
-
-    private com.abhijith.videoplaybackonrv.others.PlayerNode updateAccessTime(com.abhijith.videoplaybackonrv.others.PlayerNode playerNode) {
+    private PlayerNode updateAccessTime(PlayerNode playerNode) {
         return playerNode.setLastAccessTime(System.currentTimeMillis());
     }
 
-
-
-
-    private com.abhijith.videoplaybackonrv.others.PlayerNode updateKey(com.abhijith.videoplaybackonrv.others.PlayerNode playerNode, String key) {
+    private PlayerNode updateKey(PlayerNode playerNode, String key) {
         playerNode.setLastAccessTime(System.currentTimeMillis());
         playerNode.setKey(key);
 
         return playerNode;
     }
-
-
-
-
 }

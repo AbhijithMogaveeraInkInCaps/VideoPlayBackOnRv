@@ -56,6 +56,7 @@ public interface PlayerProvider {
      * @param isLooping whether to loop the video
      * @return the created media source
      */
+
     @NonNull
     MediaSource createMediaSource(@NonNull com.abhijith.videoplaybackonrv.others.Config config, @NonNull Uri uri, boolean isLooping);
 

@@ -55,6 +55,15 @@ public abstract class PlayableItemViewHolder extends RecyclerView.ViewHolder imp
 
 
 
+    public long getCurrentPosition(){
+        long pos;
+        if(mPlayerView.getPlayer()!=null) {
+            pos = mPlayerView.getPlayer().getCurrentPosition();
+        }
+        else
+            pos = 0L;
+        return pos;
+    }
 
     public PlayableItemViewHolder(ViewGroup parentViewGroup, View itemView) {
         super(itemView);
@@ -65,7 +74,7 @@ public abstract class PlayableItemViewHolder extends RecyclerView.ViewHolder imp
 
 
 
-
+    abstract public long getlastPlayedPosition();
     @Override
     public final void start() {
         if(!isTrulyPlayable()) {
@@ -73,6 +82,7 @@ public abstract class PlayableItemViewHolder extends RecyclerView.ViewHolder imp
         }
 
         if(startPlayer()) {
+
             onStateChanged((getPlaybackState() == Player.PlaybackState.READY) ? PlaybackState.READY : PlaybackState.STARTED);
         }
     }

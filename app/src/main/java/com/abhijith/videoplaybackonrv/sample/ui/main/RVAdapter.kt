@@ -19,7 +19,6 @@ import com.abhijith.videoplaybackonrv.util.misc.ExoPlayerUtils
 import com.abhijith.videoplaybackonrv.widget.PlayableItemsContainer
 import com.abhijith.videoplaybackonrv.widget.PlayableItemsRecyclerView
 
-
 class RVAdapter : RecyclerView.Adapter<RVAdapter.VH>() {
     class VH(v: View) : RecyclerView.ViewHolder(v), ViewHolderExtension {
         val vp = v.findViewById<PlayableItemsRecyclerView>(R.id.vp2)
@@ -74,7 +73,7 @@ class RVAdapter : RecyclerView.Adapter<RVAdapter.VH>() {
             }
             adapter = BasicVideoItemsRecyclerViewAdapter(
                 context = context!!,
-                items = VideoProvider.getVideos(count = 100, mute = true).toMutableList(),
+                items = VideoProvider.getVideos(count = 100, mute = false).toMutableList(),
                 arviConfig = Config.Builder()
                     .cache(ExoPlayerUtils.getCache(context!!))
                     .build()

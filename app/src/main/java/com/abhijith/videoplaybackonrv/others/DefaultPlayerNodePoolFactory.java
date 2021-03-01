@@ -14,7 +14,7 @@ public final class DefaultPlayerNodePoolFactory implements PlayerNodePoolFactory
     @NonNull
     @Override
     public final PlayerNodePool create() {
-        return new ArviPlayerNodePool(MAX_POOL_SIZE);
+        return new MyPlayerNodePool(MAX_POOL_SIZE);
     }
 
 

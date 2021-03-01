@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class MyRV(context: Context, attrs: AttributeSet?) : RecyclerView(context, attrs) {
 
-    val attachedCandidateList = mutableListOf<RVAdapter.VH>()
+    private val attachedCandidateList = mutableListOf<RVAdapter.VH>()
     override fun onChildAttachedToWindow(child: View) {
         super.onChildAttachedToWindow(child)
         attachedCandidateList.add(getChildViewHolder(child) as RVAdapter.VH)

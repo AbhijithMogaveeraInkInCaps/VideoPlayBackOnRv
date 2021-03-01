@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/video_item_card_corner_radius"
+    app:cardElevation="@dimen/video_item_card_elevation"
+    app:cardUseCompatPadding="true">
+
+    <com.abhijith.videoplaybackonrv.sample.ui.widget.AdvancedFrameLayout
+        android:id="@+id/videoContentWrapperFl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/video_container_background_color"
+        app:scaling_type="width_based"
+        app:aspect_ratio="@integer/aspect_ratio_4_by_3">
+
+        <!-- Video Renderer View -->
+        <ImageView
+            android:id="@+id/image_view"
+            android:src="@drawable/pic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <!-- Info Container -->
+    </com.abhijith.videoplaybackonrv.sample.ui.widget.AdvancedFrameLayout>
+
+</com.google.android.material.card.MaterialCardView>

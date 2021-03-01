@@ -18,7 +18,7 @@ public final class PlaybackInfo implements Parcelable {
     private long playbackPosition;
     private long duration;
 
-    private com.abhijith.videoplaybackonrv.model.VolumeInfo volumeInfo;
+    private VolumeInfo volumeInfo;
 
     private boolean isEnded;
 
@@ -28,16 +28,16 @@ public final class PlaybackInfo implements Parcelable {
     public PlaybackInfo() {
         this.playbackPosition = 0L;
         this.duration = 0L;
-        this.volumeInfo = new com.abhijith.videoplaybackonrv.model.VolumeInfo();
+        this.volumeInfo = new VolumeInfo();
         this.isEnded = false;
     }
 
-    public PlaybackInfo(@NonNull com.abhijith.videoplaybackonrv.model.PlaybackInfo info) {
+    public PlaybackInfo(@NonNull PlaybackInfo info) {
         Preconditions.nonNull(info);
 
         this.playbackPosition = info.playbackPosition;
         this.duration = info.duration;
-        this.volumeInfo = new com.abhijith.videoplaybackonrv.model.VolumeInfo(info.volumeInfo);
+        this.volumeInfo = new VolumeInfo(info.volumeInfo);
         this.isEnded = info.isEnded;
     }
 
@@ -47,21 +47,19 @@ public final class PlaybackInfo implements Parcelable {
     private PlaybackInfo(Parcel in) {
         this.playbackPosition = in.readLong();
         this.duration = in.readLong();
-        this.volumeInfo = in.readParcelable(com.abhijith.videoplaybackonrv.model.VolumeInfo.class.getClassLoader());
+        this.volumeInfo = in.readParcelable(VolumeInfo.class.getClassLoader());
         this.isEnded = (in.readByte() != 0);
     }
-
-
 
 
     /**
      * Sets the Video Playback Position (in milliseconds).
      *
      * @param playbackPosition video playback position in milliseconds
-     * @return the same instance of the {@link com.abhijith.videoplaybackonrv.model.PlaybackInfo} for chaining purposes.
+     * @return the same instance of the {@link PlaybackInfo} for chaining purposes.
      */
     @NonNull
-    public final com.abhijith.videoplaybackonrv.model.PlaybackInfo setPlaybackPosition(long playbackPosition) {
+    public final PlaybackInfo setPlaybackPosition(long playbackPosition) {
         this.playbackPosition = playbackPosition;
         return this;
     }
@@ -85,10 +83,10 @@ public final class PlaybackInfo implements Parcelable {
      * Sets the Video Duration (in milliseconds).
      *
      * @param duration video duration in milliseconds
-     * @return the same instance of the {@link com.abhijith.videoplaybackonrv.model.PlaybackInfo} for chaining purposes.
+     * @return the same instance of the {@link PlaybackInfo} for chaining purposes.
      */
     @NonNull
-    public final com.abhijith.videoplaybackonrv.model.PlaybackInfo setDuration(long duration) {
+    public final PlaybackInfo setDuration(long duration) {
         this.duration = duration;
         return this;
     }
@@ -112,10 +110,10 @@ public final class PlaybackInfo implements Parcelable {
      * Sets the Video Volume Info.
      *
      * @param volumeInfo video volume info
-     * @return the same instance of the {@link com.abhijith.videoplaybackonrv.model.PlaybackInfo} for chaining purposes.
+     * @return the same instance of the {@link PlaybackInfo} for chaining purposes.
      */
     @NonNull
-    public final com.abhijith.videoplaybackonrv.model.PlaybackInfo setVolumeInfo(@NonNull com.abhijith.videoplaybackonrv.model.VolumeInfo volumeInfo) {
+    public final PlaybackInfo setVolumeInfo(@NonNull VolumeInfo volumeInfo) {
         this.volumeInfo = Preconditions.checkNonNull(volumeInfo);
         return this;
     }
@@ -129,7 +127,7 @@ public final class PlaybackInfo implements Parcelable {
      * @return the video volume info.
      */
     @NonNull
-    public final com.abhijith.videoplaybackonrv.model.VolumeInfo getVolumeInfo() {
+    public final VolumeInfo getVolumeInfo() {
         return this.volumeInfo;
     }
 
@@ -140,10 +138,10 @@ public final class PlaybackInfo implements Parcelable {
      * Sets the Video Playback Ended State.
      *
      * @param isEnded whether the video playback ended or not
-     * @return the same instance of the {@link com.abhijith.videoplaybackonrv.model.PlaybackInfo} for chaining purposes.
+     * @return the same instance of the {@link PlaybackInfo} for chaining purposes.
      */
     @NonNull
-    public final com.abhijith.videoplaybackonrv.model.PlaybackInfo setEnded(boolean isEnded) {
+    public final PlaybackInfo setEnded(boolean isEnded) {
         this.isEnded = isEnded;
         return this;
     }
@@ -180,7 +178,7 @@ public final class PlaybackInfo implements Parcelable {
 
     @Override
     public final boolean equals(@Nullable Object obj) {
-        return ((obj instanceof com.abhijith.videoplaybackonrv.model.PlaybackInfo) && (obj.hashCode() == hashCode()));
+        return ((obj instanceof PlaybackInfo) && (obj.hashCode() == hashCode()));
     }
 
 
@@ -208,18 +206,18 @@ public final class PlaybackInfo implements Parcelable {
     public static final Creator<PlaybackInfo> CREATOR = new ClassLoaderCreator<PlaybackInfo>() {
 
         @Override
-        public com.abhijith.videoplaybackonrv.model.PlaybackInfo createFromParcel(Parcel source, ClassLoader loader) {
-            return new com.abhijith.videoplaybackonrv.model.PlaybackInfo(source);
+        public PlaybackInfo createFromParcel(Parcel source, ClassLoader loader) {
+            return new PlaybackInfo(source);
         }
 
         @Override
-        public com.abhijith.videoplaybackonrv.model.PlaybackInfo createFromParcel(Parcel source) {
-            return new com.abhijith.videoplaybackonrv.model.PlaybackInfo(source);
+        public PlaybackInfo createFromParcel(Parcel source) {
+            return new PlaybackInfo(source);
         }
 
         @Override
-        public com.abhijith.videoplaybackonrv.model.PlaybackInfo[] newArray(int size) {
-            return new com.abhijith.videoplaybackonrv.model.PlaybackInfo[size];
+        public PlaybackInfo[] newArray(int size) {
+            return new PlaybackInfo[size];
         }
 
     };

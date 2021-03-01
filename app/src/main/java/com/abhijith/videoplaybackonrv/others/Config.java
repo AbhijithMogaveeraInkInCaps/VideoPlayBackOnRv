@@ -3,6 +3,7 @@ package com.abhijith.videoplaybackonrv.others;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.abhijith.videoplaybackonrv.player.Player;
 import com.abhijith.videoplaybackonrv.player.util.BaseMeter;
 import com.abhijith.videoplaybackonrv.player.util.MediaSourceBuilder;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -19,12 +20,13 @@ import static com.abhijith.videoplaybackonrv.util.misc.Preconditions.checkNonNul
 import static com.google.android.exoplayer2.DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF;
 
 /**
- * {@link com.abhijith.videoplaybackonrv.player.Player} configuration.
+ * {@link Player} configuration.
  */
 public final class Config {
 
 
-    @DefaultRenderersFactory.ExtensionRendererMode public final int extensionMode;
+    @DefaultRenderersFactory.ExtensionRendererMode
+    public final int extensionMode;
 
     @NonNull public final BaseMeter<?, ?> meter;
     @NonNull public final LoadControl loadControl;
@@ -91,20 +93,13 @@ public final class Config {
         result = ((prime * result) + (hasCache() ? this.cache.hashCode() : 0));
         result = ((prime * result) + (hasDataSourceFactory() ? this.dataSourceFactory.hashCode() : 0));
         result = ((prime * result) + (hasDrmSessionManagers() ? Arrays.hashCode(this.drmSessionManagers) : 0));
-
         return result;
     }
 
-
-
-
     @Override
     public final boolean equals(Object obj) {
-        return ((obj instanceof com.abhijith.videoplaybackonrv.others.Config) && (obj.hashCode() == hashCode()));
+        return ((obj instanceof Config) && (obj.hashCode() == hashCode()));
     }
-
-
-
 
     public static final class Builder {
 
@@ -179,8 +174,8 @@ public final class Config {
         }
 
 
-        public com.abhijith.videoplaybackonrv.others.Config build() {
-            return new com.abhijith.videoplaybackonrv.others.Config(this);
+        public Config build() {
+            return new Config(this);
         }
 
 

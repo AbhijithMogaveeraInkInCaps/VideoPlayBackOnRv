@@ -5,8 +5,7 @@ import androidx.annotation.NonNull;
 /**
  * Utility class used for the injection of certain {@link PlayerProvider} components.
  */
-public final class ArviPlugins {
-
+public final class MyPlugins {
 
     private static volatile PlayerCreatorFactory playerCreatorFactory = new DefaultPlayerCreatorFactory();
     private static volatile PlayerNodePoolFactory playerNodePoolFactory = new DefaultPlayerNodePoolFactory();
@@ -86,7 +85,7 @@ public final class ArviPlugins {
     }
 
 
-    private ArviPlugins() {
+    private MyPlugins() {
         throw new IllegalStateException("Not instantiatable!");
     }
 
