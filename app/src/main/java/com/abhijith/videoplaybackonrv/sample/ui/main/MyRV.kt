@@ -36,10 +36,10 @@ class MyRV(context: Context, attrs: AttributeSet?) : RecyclerView(context, attrs
             else
                 linearLayoutManager.findLastCompletelyVisibleItemPosition()
         } else {
-            if (linearLayoutManager.findLastCompletelyVisibleItemPosition() == -1 && state == SCROLL_STATE_IDLE)
+            if (linearLayoutManager.findFirstCompletelyVisibleItemPosition() == -1 && state == SCROLL_STATE_IDLE)
                 linearLayoutManager.findFirstVisibleItemPosition()
             else
-                linearLayoutManager.findLastCompletelyVisibleItemPosition()
+                linearLayoutManager.findFirstCompletelyVisibleItemPosition()
         }
         when (state) {
             SCROLL_STATE_IDLE -> {
