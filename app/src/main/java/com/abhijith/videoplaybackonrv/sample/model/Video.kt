@@ -8,15 +8,6 @@ data class Video(
 )
 
 data class Image(
-    var id : Int,
-    var title : String = "",
-    var videoUrl : String = "",
+    val id:Int,
+    val path:String
 )
-data class RVAdapterData(val type:Type,){
-
-    companion object{
-        enum class Type{
-            IMAGE,VIDEO
-        }
-    }
-}
