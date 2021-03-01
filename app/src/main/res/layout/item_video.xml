@@ -28,7 +28,11 @@
             app:resize_mode="zoom"
             app:surface_type="texture_view"
             app:use_controller="false"/>
-
+        <ImageView
+            android:id="@+id/ivThumbnail"
+            android:src="@drawable/pic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
         <!-- Info Container -->
 
         <FrameLayout

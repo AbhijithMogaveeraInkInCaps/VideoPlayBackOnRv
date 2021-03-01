@@ -14,9 +14,7 @@ class BasicVideoItemsRecyclerViewAdapter(
     private val arviConfig : Config
 ) : RecyclerView.Adapter<BasicVideoItemViewHolder>() {
 
-
     private val inflater = LayoutInflater.from(context)
-
 
     override fun onCreateViewHolder(parent : ViewGroup, viewType : Int) : BasicVideoItemViewHolder {
         return BasicVideoItemViewHolder(

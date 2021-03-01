@@ -27,11 +27,9 @@ public interface PlayableItemsContainer {
      * Defines when the playback can be started.
      */
     enum PlaybackTriggeringState {
-
         DRAGGING,
         SETTLING,
         IDLING
-
     }
 
 

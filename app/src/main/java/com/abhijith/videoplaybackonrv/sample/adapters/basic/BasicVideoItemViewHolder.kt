@@ -21,13 +21,12 @@ class BasicVideoItemViewHolder(
     val arviConfig : Config
 ) : PlayableItemViewHolder(parent, itemView) {
 
-
     val titleTv = itemView.findViewById<TextView>(R.id.titleTv)
     val progressBar = itemView.findViewById<ProgressBar>(R.id.progressBar)
     val errorIconIv = itemView.findViewById<ImageView>(R.id.errorIconIv)
+    val ivThumbnail = itemView.findViewById<ImageView>(R.id.ivThumbnail)
 
     var video : Video? = null
-
 
     fun bindData(data : Video?) {
         data?.also {
@@ -67,7 +66,6 @@ class BasicVideoItemViewHolder(
 
     override fun onStateChanged(playbackState : PlaybackState) {
         super.onStateChanged(playbackState)
-
         when(playbackState) {
             PlaybackState.BUFFERING -> onBufferingState()
             PlaybackState.READY -> onReadyState()
@@ -87,6 +85,7 @@ class BasicVideoItemViewHolder(
     private fun onReadyState() {
         progressBar.makeGone()
         errorIconIv.makeGone()
+        ivThumbnail.makeGone()
 
         video?.isMuted?.let(::setMuted)
     }
@@ -94,16 +93,19 @@ class BasicVideoItemViewHolder(
 
     private fun onPausedState() {
         progressBar.makeGone()
+        ivThumbnail.makeVisible()
     }
 
 
     private fun onStoppedState() {
         progressBar.makeGone()
+        ivThumbnail.makeVisible()
     }
 
 
     private fun onErrorState() {
         progressBar.makeGone()
+        ivThumbnail.makeGone()
         errorIconIv.makeVisible()
     }
 }

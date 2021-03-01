@@ -12,6 +12,8 @@ import com.abhijith.videoplaybackonrv.others.PlayerProviderImpl;
 import com.abhijith.videoplaybackonrv.player.Player;
 import com.abhijith.videoplaybackonrv.util.misc.Preconditions;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +26,6 @@ import static com.abhijith.videoplaybackonrv.util.misc.CollectionUtils.hashSetOf
  * which provides the management of the items' playbacks.
  */
 public final class PlayableItemsRecyclerView extends RecyclerView implements PlayableItemsContainer {
-
 
     private static final Set<PlaybackTriggeringState> DEFAULT_PLAYBACK_TRIGGERING_STATES = hashSetOf(
         PlaybackTriggeringState.DRAGGING,
@@ -42,31 +43,20 @@ public final class PlayableItemsRecyclerView extends RecyclerView implements Pla
     private boolean mIsScrolling;
 
 
-
-
     public PlayableItemsRecyclerView(Context context) {
         super(context);
         init();
     }
-
-
-
 
     public PlayableItemsRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-
-
-
     public PlayableItemsRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }
-
-
-
 
     private void init() {
         mPreviousScrollDeltaX = 0;
@@ -77,32 +67,20 @@ public final class PlayableItemsRecyclerView extends RecyclerView implements Pla
         setRecyclerListener(this::onRecyclerViewViewRecycled);
     }
 
-
-
-
     @Override
     public final void startPlayback() {
         handleItemPlayback(true);
     }
-
-
-
 
     @Override
     public final void stopPlayback() {
         stopItemPlayback();
     }
 
-
-
-
     @Override
     public final void pausePlayback() {
         pauseItemPlayback();
     }
-
-
-
 
     @Override
     protected final void onAttachedToWindow() {
@@ -110,20 +88,14 @@ public final class PlayableItemsRecyclerView extends RecyclerView implements Pla
         startPlayback();
     }
 
-
-
-
     @Override
     protected final void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         releaseAllItems();
     }
 
-
-
-
     @Override
-    public final void onChildAttachedToWindow(View child) {
+    public final void onChildAttachedToWindow(@NotNull View child) {
         super.onChildAttachedToWindow(child);
 
         final ViewHolder viewHolder = getChildViewHolder(child);
@@ -138,17 +110,14 @@ public final class PlayableItemsRecyclerView extends RecyclerView implements Pla
         if(PlayerProviderImpl.getInstance(getContext()).hasPlayer(playable.getConfig(), playable.getKey())) {
             final Player player = PlayerProviderImpl.getInstance(getContext()).getPlayer(playable.getConfig(), playable.getKey());
 
-            if(player.isPlaying() && playable.wantsToPlay()) {
+            if(player!=null && player.isPlaying() && playable.wantsToPlay()) {
                 playable.start();
             }
         }
     }
 
-
-
-
     @Override
-    public final void onChildDetachedFromWindow(View child) {
+    public final void onChildDetachedFromWindow(@NotNull View child) {
         super.onChildDetachedFromWindow(child);
 
         final ViewHolder viewHolder = getChildViewHolder(child);
@@ -162,32 +131,20 @@ public final class PlayableItemsRecyclerView extends RecyclerView implements Pla
         playable.release();
     }
 
-
-
-
     @Override
     public final void onResume() {
         startPlayback();
     }
-
-
-
 
     @Override
     public final void onPause() {
         pausePlayback();
     }
 
-
-
-
     @Override
     public final void onDestroy() {
         releaseAllItems();
     }
-
-
-
 
     private void onRecyclerViewViewRecycled(ViewHolder holder) {
         if(!(holder instanceof Playable)) {
@@ -202,9 +159,6 @@ public final class PlayableItemsRecyclerView extends RecyclerView implements Pla
 
         playable.release();
     }
-
-
-
 
     private void handleItemPlayback(boolean allowPlay) {
         final List<Playable> playableItems = new ArrayList<>();
@@ -246,9 +200,6 @@ public final class PlayableItemsRecyclerView extends RecyclerView implements Pla
         }
     }
 
-
-
-
     private void stopItemPlayback() {
         final int childCount = getChildCount();
         ViewHolder viewHolder;
@@ -262,9 +213,6 @@ public final class PlayableItemsRecyclerView extends RecyclerView implements Pla
             }
         }
     }
-
-
-
 
     private void pauseItemPlayback() {
         final int childCount = getChildCount();
@@ -280,9 +228,6 @@ public final class PlayableItemsRecyclerView extends RecyclerView implements Pla
         }
     }
 
-
-
-
     private void releaseAllItems() {
         final int childCount = getChildCount();
         ViewHolder viewHolder;
@@ -297,9 +242,6 @@ public final class PlayableItemsRecyclerView extends RecyclerView implements Pla
         }
     }
 
-
-
-
     @Override
     public final void setAutoplayMode(@NonNull AutoplayMode autoplayMode) {
         mAutoplayMode = Preconditions.checkNonNull(autoplayMode);
@@ -309,17 +251,11 @@ public final class PlayableItemsRecyclerView extends RecyclerView implements Pla
         }
     }
 
-
-
-
     @NonNull
     @Override
     public final AutoplayMode getAutoplayMode() {
         return mAutoplayMode;
     }
-
-
-
 
     @Override
     public final void setPlaybackTriggeringStates(@NonNull PlaybackTriggeringState... states) {
@@ -329,17 +265,11 @@ public final class PlayableItemsRecyclerView extends RecyclerView implements Pla
         mPlaybackTriggeringStates.addAll((states.length == 0) ? DEFAULT_PLAYBACK_TRIGGERING_STATES : hashSetOf(states));
     }
 
-
-
-
     @NonNull
     @Override
     public final Set<PlaybackTriggeringState> getPlaybackTriggeringStates() {
         return mPlaybackTriggeringStates;
     }
-
-
-
 
     private PlaybackTriggeringState getPlaybackStateForScrollState(int scrollState) {
         switch(scrollState) {
@@ -356,9 +286,6 @@ public final class PlayableItemsRecyclerView extends RecyclerView implements Pla
         }
     }
 
-
-
-
     @Override
     public final void setAutoplayEnabled(boolean isAutoplayEnabled) {
         mIsAutoplayEnabled = isAutoplayEnabled;
@@ -370,16 +297,10 @@ public final class PlayableItemsRecyclerView extends RecyclerView implements Pla
         }
     }
 
-
-
-
     @Override
     public final boolean isAutoplayEnabled() {
         return mIsAutoplayEnabled;
     }
-
-
-
 
     @Override
     public final void onScrollStateChanged(int state) {
@@ -387,23 +308,14 @@ public final class PlayableItemsRecyclerView extends RecyclerView implements Pla
         handleItemPlayback(canPlay());
     }
 
-
-
-
     @Override
     public final void onScrolled(int dx, int dy) {
         super.onScrolled(dx, dy);
-
         mIsScrolling = ((Math.abs(mPreviousScrollDeltaX - dx) > 0) || (Math.abs(mPreviousScrollDeltaY - dy) > 0));
-
         handleItemPlayback(canPlay());
-
         mPreviousScrollDeltaX = dx;
         mPreviousScrollDeltaY = dy;
     }
-
-
-
 
     private boolean canPlay() {
         final PlaybackTriggeringState state = getPlaybackStateForScrollState(getScrollState());
@@ -414,8 +326,4 @@ public final class PlayableItemsRecyclerView extends RecyclerView implements Pla
 
         return (containsState && (isDragging || isSettling || isIdling));
     }
-
-
-
-
 }
