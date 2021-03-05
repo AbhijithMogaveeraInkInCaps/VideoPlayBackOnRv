@@ -19,6 +19,4 @@ public interface PlayerCreatorFactory {
     @NonNull
     PlayerCreator create(@NonNull PlayerProvider playerProvider, @NonNull Config config);
 
-
-
 }

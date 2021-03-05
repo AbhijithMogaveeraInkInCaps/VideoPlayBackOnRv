@@ -48,9 +48,13 @@ public final class DefaultPlayerCreator implements PlayerCreator {
     private final DataSource.Factory manifestDataSourceFactory;
     private final DrmSessionManager[] drmSessionManagers;
 
+
+
+
     public DefaultPlayerCreator(@NonNull PlayerProvider playerProvider, @NonNull Config config) {
         Preconditions.nonNull(playerProvider);
         Preconditions.nonNull(config);
+
         this.playerProvider = checkNonNull(playerProvider);
         this.trackSelector = new DefaultTrackSelector();
         this.loadControl = config.loadControl;
@@ -65,6 +69,9 @@ public final class DefaultPlayerCreator implements PlayerCreator {
         this.manifestDataSourceFactory = new DefaultDataSourceFactory(playerProvider.getContext(), playerProvider.getLibraryName());
         this.drmSessionManagers = config.drmSessionManagers;
     }
+
+
+
 
     private DataSource.Factory createDataSourceFactory(PlayerProvider playerProvider, Config config) {
         DataSource.Factory baseFactory = config.dataSourceFactory;
@@ -86,11 +93,13 @@ public final class DefaultPlayerCreator implements PlayerCreator {
         return factory;
     }
 
+
+
+
     @SuppressWarnings("unchecked")
     @NonNull
     @Override
     public final Player createPlayer() {
-
         return new DefaultPlayer(
             this.playerProvider.getContext(),
             this.renderersFactory,
@@ -101,11 +110,17 @@ public final class DefaultPlayerCreator implements PlayerCreator {
         );
     }
 
+
+
+
     @NonNull
     @Override
     public final MediaSource createMediaSource(@NonNull Uri uri) {
         return createMediaSource(uri, "");
     }
+
+
+
 
     @NonNull
     @Override
@@ -124,6 +139,9 @@ public final class DefaultPlayerCreator implements PlayerCreator {
         );
     }
 
+
+
+
     @Override
     public final int hashCode() {
         final int prime = 31;
@@ -139,6 +157,9 @@ public final class DefaultPlayerCreator implements PlayerCreator {
 
         return result;
     }
+
+
+
 
     @Override
     public final boolean equals(Object obj) {

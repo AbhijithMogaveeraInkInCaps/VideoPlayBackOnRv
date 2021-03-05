@@ -15,13 +15,19 @@ import com.abhijith.videoplaybackonrv.util.misc.Preconditions;
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 public final class PlayerNode implements Comparable<PlayerNode> {
 
+
     private long lastAccessTime;
     private String key;
     private Player player;
 
+
+
+
     public PlayerNode(@NonNull Player player) {
         this(System.currentTimeMillis(), player);
     }
+
+
 
 
     public PlayerNode(long lastAccessTime, @NonNull Player player) {
@@ -30,54 +36,84 @@ public final class PlayerNode implements Comparable<PlayerNode> {
         this.key = "";
     }
 
+
+
+
     @NonNull
-    public final PlayerNode setLastAccessTime(long lastAccessTime) {
+    public final com.abhijith.videoplaybackonrv.others.PlayerNode setLastAccessTime(long lastAccessTime) {
         this.lastAccessTime = lastAccessTime;
         return this;
     }
+
+
+
 
     public final long getLastAccessTime() {
         return this.lastAccessTime;
     }
 
+
+
+
     @NonNull
-    public final PlayerNode setPlayer(@Nullable Player player) {
+    public final com.abhijith.videoplaybackonrv.others.PlayerNode setPlayer(@Nullable Player player) {
         this.player = player;
         return this;
     }
+
+
+
 
     @Nullable
     public final Player getPlayer() {
         return this.player;
     }
 
+
+
+
     public final boolean hasPlayer() {
         return (this.player != null);
     }
 
+
+
+
     @NonNull
-    public final PlayerNode setKey(@NonNull String key) {
+    public final com.abhijith.videoplaybackonrv.others.PlayerNode setKey(@NonNull String key) {
         this.key = Preconditions.checkNonNull(key);
         return this;
     }
 
+
+
+
     @NonNull
-    public final PlayerNode removeKey() {
+    public final com.abhijith.videoplaybackonrv.others.PlayerNode removeKey() {
         this.key = "";
         return this;
     }
+
+
+
 
     @NonNull
     public final String getKey() {
         return this.key;
     }
 
+
+
+
     public final boolean isKeySet() {
         return !TextUtils.isEmpty(this.key);
     }
 
+
+
+
     @Override
-    public final int compareTo(@NonNull PlayerNode otherNode) {
+    public final int compareTo(@NonNull com.abhijith.videoplaybackonrv.others.PlayerNode otherNode) {
         if(this.lastAccessTime > otherNode.lastAccessTime) {
             return 1;
         } else if(this.lastAccessTime < otherNode.lastAccessTime) {
@@ -87,13 +123,23 @@ public final class PlayerNode implements Comparable<PlayerNode> {
         return 0;
     }
 
+
+
+
     @Override
     public final int hashCode() {
         return ((this.player != null) ? this.player.hashCode() : super.hashCode());
     }
 
+
+
+
     @Override
     public final boolean equals(Object obj) {
         return ((obj instanceof PlayerProviderImpl) && (hashCode() == obj.hashCode()));
     }
+
+
+
+
 }

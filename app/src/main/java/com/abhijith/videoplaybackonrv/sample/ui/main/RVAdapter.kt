@@ -35,15 +35,16 @@ class RVAdapter : RecyclerView.Adapter<RVAdapter.VH>() {
                 NONE -> {
                 }
                 ATTACHED_WIN -> {
+                    Log.e("Pos", "play $pos")
                     vp.startPlayback()
                 }
                 ATTACHED_LOST -> {
+                    Log.e("Pos", "pause $pos")
                     vp.pausePlayback()
                 }
                 ATTACHED_CANDIDATE -> {
                 }
                 DETACHED -> {
-                    vp.stopPlayback()
                 }
             }
         }

@@ -9,4 +9,5 @@ public interface HttpHeaders {
      * An Authorization HTTP Header used to carry the request authorization token.
      */
     String AUTHORIZATION = "Authorization";
+
 }

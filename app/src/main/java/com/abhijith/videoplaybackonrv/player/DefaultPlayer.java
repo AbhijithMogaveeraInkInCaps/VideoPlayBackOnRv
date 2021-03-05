@@ -29,48 +29,66 @@ import static com.abhijith.videoplaybackonrv.util.misc.Preconditions.checkNonNul
  */
 public class DefaultPlayer implements Player {
 
+
     private final Context context;
+
+    private PlayerEventListenerRegistry eventHandler;
+
     private RenderersFactory renderersFactory;
     private TrackSelector trackSelector;
     private LoadControl loadControl;
     private BandwidthMeter bandwidthMeter;
     private DrmSessionManager<FrameworkMediaCrypto> drmSessionManager;
     private MediaSource mediaSource;
-    private SimpleExoPlayer exoPlayer;
 
-    private PlayerEventListenerRegistry eventHandler;
+    private SimpleExoPlayer exoPlayer;
     private VolumeController volumeController;
 
     private AttachmentStateDelegate attachmentStateDelegate;
 
 
-    public DefaultPlayer(
-            @NonNull Context context,
-            @NonNull RenderersFactory renderersFactory,
-            @NonNull TrackSelector trackSelector,
-            @NonNull LoadControl loadControl
-    ) {
-        this(context, renderersFactory, trackSelector, loadControl, null);
+
+
+    public DefaultPlayer(@NonNull Context context,
+                         @NonNull RenderersFactory renderersFactory,
+                         @NonNull TrackSelector trackSelector,
+                         @NonNull LoadControl loadControl) {
+        this(
+            context,
+            renderersFactory,
+            trackSelector,
+            loadControl,
+            null
+        );
     }
 
-    public DefaultPlayer(
-            @NonNull Context context,
-            @NonNull RenderersFactory renderersFactory,
-            @NonNull TrackSelector trackSelector,
-            @NonNull LoadControl loadControl,
-            @Nullable BandwidthMeter bandwidthMeter
-    ) {
-        this(context, renderersFactory, trackSelector, loadControl, bandwidthMeter, null);
+
+
+
+    public DefaultPlayer(@NonNull Context context,
+                         @NonNull RenderersFactory renderersFactory,
+                         @NonNull TrackSelector trackSelector,
+                         @NonNull LoadControl loadControl,
+                         @Nullable BandwidthMeter bandwidthMeter) {
+        this(
+            context,
+            renderersFactory,
+            trackSelector,
+            loadControl,
+            bandwidthMeter,
+            null
+        );
     }
 
-    public DefaultPlayer(
-            @NonNull Context context,
-            @NonNull RenderersFactory renderersFactory,
-            @NonNull TrackSelector trackSelector,
-            @NonNull LoadControl loadControl,
-            @Nullable BandwidthMeter bandwidthMeter,
-            @Nullable DrmSessionManager<FrameworkMediaCrypto> drmSessionManager
-    ) {
+
+
+
+    public DefaultPlayer(@NonNull Context context,
+                         @NonNull RenderersFactory renderersFactory,
+                         @NonNull TrackSelector trackSelector,
+                         @NonNull LoadControl loadControl,
+                         @Nullable BandwidthMeter bandwidthMeter,
+                         @Nullable DrmSessionManager<FrameworkMediaCrypto> drmSessionManager) {
         this.context = checkNonNull(context).getApplicationContext();
         this.eventHandler = new PlayerEventListenerRegistry();
         this.renderersFactory = checkNonNull(renderersFactory);
@@ -80,11 +98,15 @@ public class DefaultPlayer implements Player {
         this.drmSessionManager = drmSessionManager;
     }
 
+
+
+
     @Override
     public final void init() {
         if(isInitialized()) {
             return;
         }
+
         // initializing the actual ExoPlayer
         this.exoPlayer = ExoPlayerFactory.newSimpleInstance(
             this.context,
@@ -98,6 +120,9 @@ public class DefaultPlayer implements Player {
         this.volumeController = new DefaultVolumeController(this.exoPlayer);
     }
 
+
+
+
     @Override
     public final void prepare(final boolean resetPosition) {
         checkPlayerState();
@@ -110,11 +135,18 @@ public class DefaultPlayer implements Player {
         );
     }
 
+
+
+
     @Override
     public final void play() {
         checkPlayerState();
+
         this.exoPlayer.setPlayWhenReady(true);
     }
+
+
+
 
     @Override
     public final void pause() {
@@ -123,6 +155,9 @@ public class DefaultPlayer implements Player {
         this.exoPlayer.setPlayWhenReady(false);
     }
 
+
+
+
     @Override
     public final void stop(final boolean resetPosition) {
         checkPlayerState();
@@ -130,29 +165,45 @@ public class DefaultPlayer implements Player {
         this.exoPlayer.stop(resetPosition);
     }
 
+
+
+
     @Override
     public final void seek(final long positionInMillis) {
         checkPlayerState();
+
         this.exoPlayer.seekTo(positionInMillis);
     }
+
+
+
 
     @Override
     public final void release() {
         if(!isInitialized()) {
             return;
         }
+
         this.exoPlayer.release();
         this.exoPlayer = null;
         this.attachmentStateDelegate = null;
+
         removeAllEventListeners();
     }
+
+
+
 
     @Override
     public final void attach(@NonNull final PlayerView playerView) {
         Preconditions.nonNull(playerView);
         checkPlayerState();
+
         playerView.setPlayer(this.exoPlayer);
     }
+
+
+
 
     @Override
     public final void detach(@NonNull PlayerView playerView) {
@@ -162,12 +213,18 @@ public class DefaultPlayer implements Player {
         playerView.setPlayer(null);
     }
 
+
+
+
     @Override
     public final void postAttachedEvent() {
         if(this.attachmentStateDelegate != null) {
             this.attachmentStateDelegate.onAttach(this);
         }
     }
+
+
+
 
     @Override
     public final void postDetachedEvent() {
@@ -176,11 +233,17 @@ public class DefaultPlayer implements Player {
         }
     }
 
+
+
+
     private void checkPlayerState() {
         if(!isInitialized()) {
             throw new IllegalStateException("The Player must be initialized first.");
         }
     }
+
+
+
 
     private void checkMediaSource() {
         if(this.mediaSource == null) {
@@ -188,38 +251,61 @@ public class DefaultPlayer implements Player {
         }
     }
 
+
+
+
     @Override
     public final void setAttachmentStateDelegate(@Nullable AttachmentStateDelegate attachmentStateDelegate) {
         this.attachmentStateDelegate = attachmentStateDelegate;
     }
 
+
+
+
     @Override
     public final void addEventListener(@NonNull EventListener eventListener) {
         Preconditions.nonNull(eventListener);
+
         this.eventHandler.addListener(eventListener);
     }
+
+
+
 
     @Override
     public final void removeEventListener(@NonNull EventListener eventListener) {
         Preconditions.nonNull(eventListener);
+
         this.eventHandler.removeListener(eventListener);
     }
+
+
+
 
     @Override
     public final void removeAllEventListeners() {
         this.eventHandler.removeAllListeners();
     }
 
+
+
+
     @Override
     public final void setMediaSource(@NonNull MediaSource mediaSource) {
         this.mediaSource = checkNonNull(mediaSource);
     }
+
+
+
 
     @Nullable
     @Override
     public final MediaSource getMediaSource() {
         return this.mediaSource;
     }
+
+
+
 
     @NonNull
     @Override
@@ -228,35 +314,56 @@ public class DefaultPlayer implements Player {
         return this.volumeController;
     }
 
+
+
+
     @Override
     public final int getPlaybackState() {
         return (isInitialized() ? this.exoPlayer.getPlaybackState() : PlaybackState.IDLE);
     }
+
+
+
 
     @Override
     public final long getPlaybackPosition() {
         return (isInitialized() ? this.exoPlayer.getCurrentPosition() : 0L);
     }
 
+
+
+
     @Override
     public final long getDuration() {
         return (isInitialized() ? this.exoPlayer.getDuration() : 0L);
     }
+
+
+
 
     @Override
     public final float getBufferedPercentage() {
         return (isInitialized() ? this.exoPlayer.getBufferedPercentage() : 0L);
     }
 
+
+
+
     @Override
     public final boolean isLooping() {
         return ExoPlayerUtils.isLooping(this.mediaSource);
     }
 
+
+
+
     @Override
     public final boolean isInitialized() {
         return (this.exoPlayer != null);
     }
+
+
+
 
     @Override
     public final boolean isPlaying() {
@@ -270,14 +377,24 @@ public class DefaultPlayer implements Player {
         );
     }
 
+
+
+
     @Override
     public final boolean isAttached(@NonNull PlayerView playerView) {
         Preconditions.nonNull(playerView);
         return ((playerView.getPlayer() != null) && (playerView.getPlayer() == this.exoPlayer));
     }
 
+
+
+
     @Override
     public final boolean isAttached() {
         return ((this.attachmentStateDelegate != null) && this.attachmentStateDelegate.isAttached(this));
     }
+
+
+
+
 }
