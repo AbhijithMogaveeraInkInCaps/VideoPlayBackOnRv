@@ -326,4 +326,9 @@ public final class PlayableItemsRecyclerView extends RecyclerView implements Pla
 
         return (containsState && (isDragging || isSettling || isIdling));
     }
+
+    public void setMute() {
+        pausePlayback();
+        startPlayback();
+    }
 }

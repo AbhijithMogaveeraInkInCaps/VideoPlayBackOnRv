@@ -41,8 +41,8 @@ import com.google.android.exoplayer2.ui.PlayerView;
  *      <br>
  * <br>
  */
-public abstract class PlayableItemViewHolder extends RecyclerView.ViewHolder implements Playable,
-        Player.AttachmentStateDelegate, Player.EventListener {
+public abstract class PlayableItemViewHolder extends RecyclerView.ViewHolder
+        implements Playable, Player.AttachmentStateDelegate, Player.EventListener {
 
 
     public static final String TAG = "PlayableItemViewHolder";

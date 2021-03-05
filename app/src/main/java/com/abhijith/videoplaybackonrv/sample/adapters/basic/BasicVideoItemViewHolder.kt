@@ -29,6 +29,10 @@ class BasicVideoItemViewHolder(
 
     var video : Video? = null
 
+    fun setMute(boolean: Boolean){
+        isMuted = boolean
+    }
+
     fun bindData(data : Video?) {
         data?.also {
 //            seekTo(1)
@@ -90,6 +94,7 @@ class BasicVideoItemViewHolder(
     }
 
     private fun onStartedState() {
+        setMute(GlobalFlag.isMute)
         ivThumbnail.makeGone()
         seekTo(lastPlayedPosition)
     }
@@ -128,4 +133,8 @@ class BasicVideoItemViewHolder(
         ivThumbnail.makeGone()
         errorIconIv.makeVisible()
     }
+}
+
+object GlobalFlag{
+    val isMute = false
 }

@@ -17,12 +17,15 @@ class BasicVideoItemsRecyclerViewAdapter(
 
     private val inflater = LayoutInflater.from(context)
 
+
+
     override fun getItemViewType(position: Int): Int {
         return if(items[position] is Image)
             ImageViewType
         else
             VideoViewType
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             ImageViewType -> {
