@@ -1,334 +1,288 @@
-package com.abhijith.videoplaybackonrv.widget;
+package com.abhijith.videoplaybackonrv.widget
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.View;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.abhijith.videoplaybackonrv.others.PlayerProviderImpl;
-import com.abhijith.videoplaybackonrv.player.Player;
-import com.abhijith.videoplaybackonrv.util.misc.Preconditions;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static com.abhijith.videoplaybackonrv.util.misc.CollectionUtils.hashSetOf;
+import android.content.Context
+import android.util.AttributeSet
+import android.view.View
+import androidx.recyclerview.widget.RecyclerView
+import com.abhijith.videoplaybackonrv.others.PlayerProviderImpl
+import com.abhijith.videoplaybackonrv.util.misc.CollectionUtils
+import com.abhijith.videoplaybackonrv.util.misc.Preconditions
+import com.abhijith.videoplaybackonrv.widget.PlayableItemsContainer.AutoplayMode
+import com.abhijith.videoplaybackonrv.widget.PlayableItemsContainer.PlaybackTriggeringState
+import java.util.*
 
 /**
- * A concrete implementation of the {@link PlayableItemsContainer} based on the {@link RecyclerView}
+ * A concrete implementation of the [PlayableItemsContainer] based on the [RecyclerView]
  * which provides the management of the items' playbacks.
  */
-public final class PlayableItemsRecyclerView extends RecyclerView implements PlayableItemsContainer {
+class PlayableItemsRecyclerView : RecyclerView, PlayableItemsContainer {
+    private val mPlaybackTriggeringStates: MutableSet<PlaybackTriggeringState> = HashSet()
+    private var mPreviousScrollDeltaX = 0
+    private var mPreviousScrollDeltaY = 0
+    private var mAutoplayMode: AutoplayMode? = null
+    private var mIsAutoplayEnabled = false
+    private var mIsScrolling = false
 
-    private static final Set<PlaybackTriggeringState> DEFAULT_PLAYBACK_TRIGGERING_STATES = hashSetOf(
-        PlaybackTriggeringState.DRAGGING,
-        PlaybackTriggeringState.IDLING
-    );
-
-    private final Set<PlaybackTriggeringState> mPlaybackTriggeringStates = new HashSet<>();
-
-    private int mPreviousScrollDeltaX;
-    private int mPreviousScrollDeltaY;
-
-    private AutoplayMode mAutoplayMode;
-
-    private boolean mIsAutoplayEnabled;
-    private boolean mIsScrolling;
-
-
-    public PlayableItemsRecyclerView(Context context) {
-        super(context);
-        init();
+    constructor(context: Context?) : super(context!!) {
+        init()
     }
 
-    public PlayableItemsRecyclerView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
+    constructor(context: Context?, attrs: AttributeSet?) : super(
+        context!!, attrs
+    ) {
+        init()
     }
 
-    public PlayableItemsRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        init();
+    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(
+        context!!, attrs, defStyle
+    ) {
+        init()
     }
 
-    private void init() {
-        mPreviousScrollDeltaX = 0;
-        mPreviousScrollDeltaY = 0;
-        mAutoplayMode = AutoplayMode.ONE_AT_A_TIME;
-        mIsAutoplayEnabled = true;
-        mPlaybackTriggeringStates.addAll(DEFAULT_PLAYBACK_TRIGGERING_STATES);
-        setRecyclerListener(this::onRecyclerViewViewRecycled);
+    private fun init() {
+        mPreviousScrollDeltaX = 0
+        mPreviousScrollDeltaY = 0
+        mAutoplayMode = AutoplayMode.ONE_AT_A_TIME
+        mIsAutoplayEnabled = true
+        mPlaybackTriggeringStates.addAll(DEFAULT_PLAYBACK_TRIGGERING_STATES)
+        setRecyclerListener { holder: ViewHolder -> onRecyclerViewViewRecycled(holder) }
     }
 
-    @Override
-    public final void startPlayback() {
-        handleItemPlayback(true);
+    override fun startPlayback() {
+        handleItemPlayback(true)
     }
 
-    @Override
-    public final void stopPlayback() {
-        stopItemPlayback();
+    override fun stopPlayback() {
+        stopItemPlayback()
     }
 
-    @Override
-    public final void pausePlayback() {
-        pauseItemPlayback();
+    override fun pausePlayback() {
+        pauseItemPlayback()
     }
 
-    @Override
-    protected final void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        startPlayback();
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        startPlayback()
     }
 
-    @Override
-    protected final void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        releaseAllItems();
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        releaseAllItems()
     }
 
-    @Override
-    public final void onChildAttachedToWindow(@NotNull View child) {
-        super.onChildAttachedToWindow(child);
+    val playableAttachedCandidates = mutableListOf<PlayableItemViewHolder>()
 
-        final ViewHolder viewHolder = getChildViewHolder(child);
-
-        if(!(viewHolder instanceof Playable)) {
-            return;
+    fun setMute(boolean: Boolean){
+        playableAttachedCandidates.forEach {
+            it.isMuted = boolean
         }
+    }
 
+    override fun onChildAttachedToWindow(child: View) {
+        super.onChildAttachedToWindow(child)
+        val viewHolder = getChildViewHolder(child)
+        if (viewHolder !is Playable) {
+            return
+        }
+        if (viewHolder is PlayableItemViewHolder)
+            playableAttachedCandidates.add(viewHolder)
         // if necessary, reattaching the active player to the Playable
-        final Playable playable = (Playable) viewHolder;
-
-        if(PlayerProviderImpl.getInstance(getContext()).hasPlayer(playable.getConfig(), playable.getKey())) {
-            final Player player = PlayerProviderImpl.getInstance(getContext()).getPlayer(playable.getConfig(), playable.getKey());
-
-            if(player!=null && player.isPlaying() && playable.wantsToPlay()) {
-                playable.start();
+        val playable = viewHolder as Playable
+        if (PlayerProviderImpl.getInstance(context).hasPlayer(playable.config, playable.key)) {
+            val player =
+                PlayerProviderImpl.getInstance(context).getPlayer(playable.config, playable.key)
+            if (player != null && player.isPlaying && playable.wantsToPlay()) {
+                playable.start()
             }
         }
     }
 
-    @Override
-    public final void onChildDetachedFromWindow(@NotNull View child) {
-        super.onChildDetachedFromWindow(child);
-
-        final ViewHolder viewHolder = getChildViewHolder(child);
-
-        if(!(viewHolder instanceof Playable)) {
-            return;
+    override fun onChildDetachedFromWindow(child: View) {
+        super.onChildDetachedFromWindow(child)
+        val viewHolder = getChildViewHolder(child)
+        if (viewHolder !is Playable) {
+            return
         }
-
+        if (viewHolder is PlayableItemViewHolder)
+            playableAttachedCandidates.remove(viewHolder)
         // releasing the associated player (Playable-wise) and other resources
-        final Playable playable = (Playable) viewHolder;
-        playable.release();
+        val playable = viewHolder as Playable
+        playable.release()
     }
 
-    @Override
-    public final void onResume() {
-        startPlayback();
+    override fun onResume() {
+        startPlayback()
     }
 
-    @Override
-    public final void onPause() {
-        pausePlayback();
+    override fun onPause() {
+        pausePlayback()
     }
 
-    @Override
-    public final void onDestroy() {
-        releaseAllItems();
+    override fun onDestroy() {
+        releaseAllItems()
     }
 
-    private void onRecyclerViewViewRecycled(ViewHolder holder) {
-        if(!(holder instanceof Playable)) {
-            return;
+    private fun onRecyclerViewViewRecycled(holder: ViewHolder) {
+        if (holder !is Playable) {
+            return
         }
-
-        final Playable playable = (Playable) holder;
-
-        if(playable.wantsToPlay()) {
-            return;
+        val playable = holder as Playable
+        if (playable.wantsToPlay()) {
+            return
         }
-
-        playable.release();
+        playable.release()
     }
 
-    private void handleItemPlayback(boolean allowPlay) {
-        final List<Playable> playableItems = new ArrayList<>();
-        final int childCount = getChildCount();
-        final boolean canHaveMultipleActiveItems = AutoplayMode.MULTIPLE_SIMULTANEOUSLY.equals(mAutoplayMode);
-
-        ViewHolder viewHolder;
-        boolean isInPlayableArea;
-        boolean hasActiveItem = false;
+    private fun handleItemPlayback(allowPlay: Boolean) {
+        val playableItems: MutableList<Playable> = ArrayList()
+        val childCount = childCount
+        val canHaveMultipleActiveItems = AutoplayMode.MULTIPLE_SIMULTANEOUSLY == mAutoplayMode
+        var viewHolder: ViewHolder?
+        var isInPlayableArea: Boolean
+        var hasActiveItem = false
 
         // extracting all the playable visible items
-        for(int i = 0; i < childCount; i++) {
-            viewHolder = findContainingViewHolder(getChildAt(i));
-
-            if((viewHolder instanceof Playable)
-                    && ((Playable) viewHolder).isTrulyPlayable()) {
-                playableItems.add((Playable) viewHolder);
+        for (i in 0 until childCount) {
+            viewHolder = findContainingViewHolder(getChildAt(i))
+            if (viewHolder is Playable
+                && (viewHolder as Playable).isTrulyPlayable
+            ) {
+                playableItems.add(viewHolder as Playable)
             }
         }
 
         // processing the extracted Playable items
-        for(Playable playable : playableItems) {
-            isInPlayableArea = playable.wantsToPlay();
+        for (playable in playableItems) {
+            isInPlayableArea = playable.wantsToPlay()
 
             // handling the playback state
-            if(isInPlayableArea && (!hasActiveItem || canHaveMultipleActiveItems)) {
-                if(!playable.isPlaying()
-                        && mIsAutoplayEnabled
-                        && allowPlay) {
-                    playable.start();
+            if (isInPlayableArea && (!hasActiveItem || canHaveMultipleActiveItems)) {
+                if (!playable.isPlaying
+                    && mIsAutoplayEnabled
+                    && allowPlay
+                ) {
+                    playable.start()
                 }
-
-                hasActiveItem = true;
-            } else if(playable.isPlaying()) {
-                playable.pause();
+                hasActiveItem = true
+            } else if (playable.isPlaying) {
+                playable.pause()
             }
-
-            playable.onPlayabilityStateChanged(isInPlayableArea);
+            playable.onPlayabilityStateChanged(isInPlayableArea)
         }
     }
 
-    private void stopItemPlayback() {
-        final int childCount = getChildCount();
-        ViewHolder viewHolder;
-
-        for(int i = 0; i < childCount; i++) {
-            viewHolder = findContainingViewHolder(getChildAt(i));
-
-            if((viewHolder instanceof Playable)
-                    && ((Playable) viewHolder).isTrulyPlayable()) {
-                ((Playable) viewHolder).stop();
+    private fun stopItemPlayback() {
+        val childCount = childCount
+        var viewHolder: ViewHolder?
+        for (i in 0 until childCount) {
+            viewHolder = findContainingViewHolder(getChildAt(i))
+            if (viewHolder is Playable
+                && (viewHolder as Playable).isTrulyPlayable
+            ) {
+                (viewHolder as Playable).stop()
             }
         }
     }
 
-    private void pauseItemPlayback() {
-        final int childCount = getChildCount();
-        ViewHolder viewHolder;
-
-        for(int i = 0; i < childCount; i++) {
-            viewHolder = findContainingViewHolder(getChildAt(i));
-
-            if((viewHolder instanceof Playable)
-                    && ((Playable) viewHolder).isTrulyPlayable()) {
-                ((Playable) viewHolder).pause();
+    private fun pauseItemPlayback() {
+        val childCount = childCount
+        var viewHolder: ViewHolder?
+        for (i in 0 until childCount) {
+            viewHolder = findContainingViewHolder(getChildAt(i))
+            if (viewHolder is Playable
+                && (viewHolder as Playable).isTrulyPlayable
+            ) {
+                (viewHolder as Playable).pause()
             }
         }
     }
 
-    private void releaseAllItems() {
-        final int childCount = getChildCount();
-        ViewHolder viewHolder;
-
-        for(int i = 0; i < childCount; i++) {
-            viewHolder = findContainingViewHolder(getChildAt(i));
-
-            if((viewHolder instanceof Playable)
-                    && ((Playable) viewHolder).isTrulyPlayable()) {
-                ((Playable) viewHolder).release();
+    private fun releaseAllItems() {
+        val childCount = childCount
+        var viewHolder: ViewHolder?
+        for (i in 0 until childCount) {
+            viewHolder = findContainingViewHolder(getChildAt(i))
+            if (viewHolder is Playable
+                && (viewHolder as Playable).isTrulyPlayable
+            ) {
+                (viewHolder as Playable).release()
             }
         }
     }
 
-    @Override
-    public final void setAutoplayMode(@NonNull AutoplayMode autoplayMode) {
-        mAutoplayMode = Preconditions.checkNonNull(autoplayMode);
-
-        if(isAutoplayEnabled()) {
-            startPlayback();
+    override fun setAutoplayMode(autoplayMode: AutoplayMode) {
+        mAutoplayMode = Preconditions.checkNonNull(autoplayMode)
+        if (isAutoplayEnabled) {
+            startPlayback()
         }
     }
 
-    @NonNull
-    @Override
-    public final AutoplayMode getAutoplayMode() {
-        return mAutoplayMode;
+    override fun getAutoplayMode(): AutoplayMode {
+        return mAutoplayMode!!
     }
 
-    @Override
-    public final void setPlaybackTriggeringStates(@NonNull PlaybackTriggeringState... states) {
-        Preconditions.nonNull(states);
-
-        mPlaybackTriggeringStates.clear();
-        mPlaybackTriggeringStates.addAll((states.length == 0) ? DEFAULT_PLAYBACK_TRIGGERING_STATES : hashSetOf(states));
+    override fun setPlaybackTriggeringStates(vararg states: PlaybackTriggeringState) {
+        Preconditions.nonNull(states)
+        mPlaybackTriggeringStates.clear()
+        mPlaybackTriggeringStates.addAll(
+            if (states.size == 0) DEFAULT_PLAYBACK_TRIGGERING_STATES else CollectionUtils.hashSetOf(
+                *states
+            )
+        )
     }
 
-    @NonNull
-    @Override
-    public final Set<PlaybackTriggeringState> getPlaybackTriggeringStates() {
-        return mPlaybackTriggeringStates;
+    override fun getPlaybackTriggeringStates(): Set<PlaybackTriggeringState> {
+        return mPlaybackTriggeringStates
     }
 
-    private PlaybackTriggeringState getPlaybackStateForScrollState(int scrollState) {
-        switch(scrollState) {
-
-            case SCROLL_STATE_SETTLING:
-                return PlaybackTriggeringState.SETTLING;
-
-            case SCROLL_STATE_DRAGGING:
-                return PlaybackTriggeringState.DRAGGING;
-
-            default:
-                return PlaybackTriggeringState.IDLING;
-
+    private fun getPlaybackStateForScrollState(scrollState: Int): PlaybackTriggeringState {
+        return when (scrollState) {
+            SCROLL_STATE_SETTLING -> PlaybackTriggeringState.SETTLING
+            SCROLL_STATE_DRAGGING -> PlaybackTriggeringState.DRAGGING
+            else -> PlaybackTriggeringState.IDLING
         }
     }
 
-    @Override
-    public final void setAutoplayEnabled(boolean isAutoplayEnabled) {
-        mIsAutoplayEnabled = isAutoplayEnabled;
-
-        if(isAutoplayEnabled) {
-            startPlayback();
+    override fun setAutoplayEnabled(isAutoplayEnabled: Boolean) {
+        mIsAutoplayEnabled = isAutoplayEnabled
+        if (isAutoplayEnabled) {
+            startPlayback()
         } else {
-            stopPlayback();
+            stopPlayback()
         }
     }
 
-    @Override
-    public final boolean isAutoplayEnabled() {
-        return mIsAutoplayEnabled;
+    override fun isAutoplayEnabled(): Boolean {
+        return mIsAutoplayEnabled
     }
 
-    @Override
-    public final void onScrollStateChanged(int state) {
-        super.onScrollStateChanged(state);
-        handleItemPlayback(canPlay());
+    override fun onScrollStateChanged(state: Int) {
+        super.onScrollStateChanged(state)
+        handleItemPlayback(canPlay())
     }
 
-    @Override
-    public final void onScrolled(int dx, int dy) {
-        super.onScrolled(dx, dy);
-        mIsScrolling = ((Math.abs(mPreviousScrollDeltaX - dx) > 0) || (Math.abs(mPreviousScrollDeltaY - dy) > 0));
-        handleItemPlayback(canPlay());
-        mPreviousScrollDeltaX = dx;
-        mPreviousScrollDeltaY = dy;
+    override fun onScrolled(dx: Int, dy: Int) {
+        super.onScrolled(dx, dy)
+        mIsScrolling =
+            Math.abs(mPreviousScrollDeltaX - dx) > 0 || Math.abs(mPreviousScrollDeltaY - dy) > 0
+        handleItemPlayback(canPlay())
+        mPreviousScrollDeltaX = dx
+        mPreviousScrollDeltaY = dy
     }
 
-    private boolean canPlay() {
-        final PlaybackTriggeringState state = getPlaybackStateForScrollState(getScrollState());
-        final boolean containsState = mPlaybackTriggeringStates.contains(state);
-        final boolean isDragging = (PlaybackTriggeringState.DRAGGING.equals(state) && !mIsScrolling);
-        final boolean isSettling = PlaybackTriggeringState.SETTLING.equals(state);
-        final boolean isIdling = PlaybackTriggeringState.IDLING.equals(state);
-
-        return (containsState && (isDragging || isSettling || isIdling));
+    private fun canPlay(): Boolean {
+        val state = getPlaybackStateForScrollState(scrollState)
+        val containsState = mPlaybackTriggeringStates.contains(state)
+        val isDragging = PlaybackTriggeringState.DRAGGING == state && !mIsScrolling
+        val isSettling = PlaybackTriggeringState.SETTLING == state
+        val isIdling = PlaybackTriggeringState.IDLING == state
+        return containsState && (isDragging || isSettling || isIdling)
     }
 
-    public void setMute() {
-        pausePlayback();
-        startPlayback();
+    companion object {
+        private val DEFAULT_PLAYBACK_TRIGGERING_STATES = CollectionUtils.hashSetOf(
+            PlaybackTriggeringState.DRAGGING,
+            PlaybackTriggeringState.IDLING
+        )
     }
 }

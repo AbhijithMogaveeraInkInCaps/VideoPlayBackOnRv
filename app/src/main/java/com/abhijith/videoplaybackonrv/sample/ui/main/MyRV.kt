@@ -13,16 +13,25 @@ class MyRV(context: Context, attrs: AttributeSet?) : RecyclerView(context, attrs
     override fun onChildAttachedToWindow(child: View) {
         super.onChildAttachedToWindow(child)
         attachedCandidateList.add(getChildViewHolder(child) as RVAdapter.VH)
-        if(!isScrolledDown){
+        if (!isScrollStarted) {
             attachedCandidateList.forEach {
-                if(it.adapterPosition==0){
-                    Log.e("ARRVI","Attachedwin ${it.adapterPosition}")
+                if (it.adapterPosition == 0) {
+                    Log.e("ARRVI", "Attachedwin ${it.adapterPosition}")
                     it.action(ExtensionInfo(SelectiveAction.ATTACHED_WIN))
-                }else{
-                    Log.e("ARRVI","Attachedlost ${it.adapterPosition}")
+                } else {
+                    Log.e("ARRVI", "Attachedlost ${it.adapterPosition}")
                     it.action(ExtensionInfo(SelectiveAction.DETACHED))
                 }
             }
+        }
+    }
+
+    fun mute(boolean: Boolean) {
+        attachedCandidateList.forEach {
+            if (boolean)
+                it.action(ExtensionInfo(SelectiveAction.MUTE))
+            else
+                it.action(ExtensionInfo(SelectiveAction.UN_MUTE))
         }
     }
 
@@ -58,10 +67,10 @@ class MyRV(context: Context, attrs: AttributeSet?) : RecyclerView(context, attrs
             SCROLL_STATE_IDLE -> {
                 attachedCandidateList.forEach {
                     it.action(
-                            if (visibleItemPosition == it.pos)
-                                ExtensionInfo(SelectiveAction.ATTACHED_WIN)
-                            else
-                                ExtensionInfo(SelectiveAction.ATTACHED_LOST)
+                        if (visibleItemPosition == it.pos)
+                            ExtensionInfo(SelectiveAction.ATTACHED_WIN)
+                        else
+                            ExtensionInfo(SelectiveAction.ATTACHED_LOST)
                     )
                 }
             }

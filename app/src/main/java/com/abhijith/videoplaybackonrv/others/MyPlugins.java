@@ -21,6 +21,8 @@ public final class MyPlugins {
         isLockedDown = true;
     }
 
+    static void setMute(boolean flag){
+    }
 
     /**
      * Retrieves the current lock-down state.

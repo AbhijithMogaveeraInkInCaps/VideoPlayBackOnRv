@@ -2,6 +2,7 @@ package com.abhijith.videoplaybackonrv.player.util;
 
 import androidx.annotation.NonNull;
 
+import com.abhijith.videoplaybackonrv.sample.adapters.basic.GlobalFlag;
 import com.abhijith.videoplaybackonrv.util.misc.Preconditions;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 
@@ -11,33 +12,22 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
  */
 public final class DefaultVolumeController implements VolumeController {
 
-
     private final SimpleExoPlayer player;
 
     private float oldVolume;
-
-
-
 
     public DefaultVolumeController(@NonNull SimpleExoPlayer player) {
         this.player = Preconditions.checkNonNull(player);
         this.oldVolume = getVolume();
     }
 
-
-
-
     @Override
     public final void mute() {
         if(!isMuted()) {
             this.oldVolume = getVolume();
-
             setVolume(0f);
         }
     }
-
-
-
 
     @Override
     public final void unmute() {
@@ -46,24 +36,15 @@ public final class DefaultVolumeController implements VolumeController {
         }
     }
 
-
-
-
     @Override
     public final void setVolume(float audioVolume) {
         this.player.setVolume(audioVolume);
     }
 
-
-
-
     @Override
     public final float getVolume() {
         return this.player.getVolume();
     }
-
-
-
 
     @Override
     public final void setMuted(boolean isMuted) {
@@ -74,15 +55,9 @@ public final class DefaultVolumeController implements VolumeController {
         }
     }
 
-
-
-
     @Override
     public final boolean isMuted() {
         return (getVolume() <= 0f);
     }
-
-
-
 
 }

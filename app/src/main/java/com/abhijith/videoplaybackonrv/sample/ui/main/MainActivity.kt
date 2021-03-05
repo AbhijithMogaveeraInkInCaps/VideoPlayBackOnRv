@@ -1,22 +1,24 @@
 package com.abhijith.videoplaybackonrv.sample.ui.main
 
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import android.widget.ImageView
 import com.abhijith.videoplaybackonrv.R
-import com.abhijith.videoplaybackonrv.helpers.PreCacheLinearLayoutManager
-import com.abhijith.videoplaybackonrv.others.Config
-import com.abhijith.videoplaybackonrv.sample.adapters.basic.BasicVideoItemsRecyclerViewAdapter
+import com.abhijith.videoplaybackonrv.sample.adapters.basic.GlobalFlag
 import com.abhijith.videoplaybackonrv.sample.ui.base.BaseActivity
-import com.abhijith.videoplaybackonrv.sample.util.providers.VideoProvider
-import com.abhijith.videoplaybackonrv.util.misc.ExoPlayerUtils
-import com.abhijith.videoplaybackonrv.widget.PlayableItemsContainer
-import com.abhijith.videoplaybackonrv.widget.PlayableItemsRecyclerView
 
 class MainActivity : BaseActivity() {
 
     override fun init(savedInstanceState : Bundle?) {
-        findViewById<RecyclerView>(R.id.rv)?.apply {
+        val myRV = findViewById<MyRV>(R.id.rv)
+        findViewById<ImageView>(R.id.volume).apply{
+            setOnClickListener {
+                myRV.apply {
+                    GlobalFlag.isMute = !GlobalFlag.isMute
+                    this.mute(GlobalFlag.isMute)
+                }
+            }
+        }
+        myRV?.apply {
            /* setPlaybackTriggeringStates(
                 PlayableItemsContainer.PlaybackTriggeringState.IDLING,
                 PlayableItemsContainer.PlaybackTriggeringState.DRAGGING

@@ -1,5 +1,6 @@
 package com.abhijith.videoplaybackonrv.sample.adapters.basic
 
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -29,15 +30,17 @@ class BasicVideoItemViewHolder(
 
     var video : Video? = null
 
-    fun setMute(boolean: Boolean){
-        isMuted = boolean
-    }
+//    fun setMute(boolean: Boolean){
+//        video?.isMuted = boolean
+//    }
 
     fun bindData(data : Video?) {
         data?.also {
+            video = it
+//            video?.isMuted = true
 //            seekTo(1)
             handleData(it)
-            video = it
+//            isMuted = true
         }
     }
 
@@ -90,38 +93,44 @@ class BasicVideoItemViewHolder(
     }
 
     private fun onRestarted() {
-
+        log("onRestarted")
     }
 
     private fun onStartedState() {
-        setMute(GlobalFlag.isMute)
+        log("onStartedState")
         ivThumbnail.makeGone()
+//        isMuted = GlobalFlag.isMute
         seekTo(lastPlayedPosition)
     }
 
 
     private fun onBufferingState() {
+        log("onBufferingState")
         progressBar.makeVisible()
         errorIconIv.makeGone()
     }
 
 
     private fun onReadyState() {
+        log("onReadyState")
         progressBar.makeGone()
         errorIconIv.makeGone()
         ivThumbnail.makeGone()
 
-        video?.isMuted?.let(::setMuted)
+//        video?.isMuted?.let(::setMuted)
+        GlobalFlag.isMute.let(::setMuted)
     }
 
 
     private fun onPausedState() {
+        log("onPausedState")
         lastPlayedPosition = currentPosition
         progressBar.makeGone()
     }
 
 
     private fun onStoppedState() {
+        log("onStoppedState")
         lastPlayedPosition = 0L
         progressBar.makeGone()
         ivThumbnail.makeVisible()
@@ -129,6 +138,7 @@ class BasicVideoItemViewHolder(
 
 
     private fun onErrorState() {
+        log("onErrorState")
         progressBar.makeGone()
         ivThumbnail.makeGone()
         errorIconIv.makeVisible()
@@ -136,5 +146,9 @@ class BasicVideoItemViewHolder(
 }
 
 object GlobalFlag{
-    val isMute = false
+    var isMute = false
+}
+
+fun log(string: String){
+    Log.e("RAO",string)
 }

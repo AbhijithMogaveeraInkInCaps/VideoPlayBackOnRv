@@ -45,7 +45,10 @@ class RVAdapter : RecyclerView.Adapter<RVAdapter.VH>() {
                 ATTACHED_CANDIDATE -> {
                 }
                 MUTE->{
-                    vp.setMute()
+                    vp.setMute(true)
+                }
+                UN_MUTE->{
+                    vp.setMute(false)
                 }
                 DETACHED -> {
                     vp.stopPlayback()
@@ -104,5 +107,6 @@ enum class SelectiveAction {
     ATTACHED_LOST,
     ATTACHED_CANDIDATE,
     DETACHED,
-    MUTE
+    MUTE,
+    UN_MUTE
 }
