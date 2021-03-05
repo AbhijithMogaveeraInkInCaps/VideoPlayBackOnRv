@@ -20,23 +20,20 @@ import java.lang.annotation.RetentionPolicy;
  */
 public interface Player {
 
-
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({
-        PlaybackState.IDLE,
-        PlaybackState.BUFFERING,
-        PlaybackState.READY,
-        PlaybackState.ENDED
+            PlaybackState.IDLE,
+            PlaybackState.BUFFERING,
+            PlaybackState.READY,
+            PlaybackState.ENDED
     })
     @interface PlaybackState {
-
         int IDLE = com.google.android.exoplayer2.Player.STATE_IDLE;
         int BUFFERING = com.google.android.exoplayer2.Player.STATE_BUFFERING;
         int READY = com.google.android.exoplayer2.Player.STATE_READY;
         int ENDED = com.google.android.exoplayer2.Player.STATE_ENDED;
 
     }
-
 
     /**
      * Initializes the player and related internal components.
@@ -292,6 +289,5 @@ public interface Player {
         void onPlayerError(ExoPlaybackException error);
 
     }
-
 
 }

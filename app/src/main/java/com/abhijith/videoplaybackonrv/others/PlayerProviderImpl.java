@@ -21,7 +21,7 @@ import java.util.Map;
 
 import static com.google.android.exoplayer2.util.Util.getUserAgent;
 /**
- * The main {@link com.abhijith.videoplaybackonrv.others.PlayerProvider} responsible for the management of all the {@link Player}s
+ * The main {@link PlayerProvider} responsible for the management of all the {@link Player}s
  * in the context of the application.
  */
 public final class PlayerProviderImpl implements PlayerProvider {
@@ -71,7 +71,6 @@ public final class PlayerProviderImpl implements PlayerProvider {
         // Adapt from ExoPlayer demo app. Start this on demand.
         final CookieManager cookieManager = new CookieManager();
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ORIGINAL_SERVER);
-
         if(CookieHandler.getDefault() != cookieManager) {
             CookieHandler.setDefault(cookieManager);
         }
@@ -79,7 +78,9 @@ public final class PlayerProviderImpl implements PlayerProvider {
 
     @NonNull
     @Override
-    public final MediaSource createMediaSource(@NonNull Uri uri) {
+    public final MediaSource createMediaSource(
+            @NonNull Uri uri
+    ) {
         return createMediaSource(DEFAULT_CONFIG, uri);
     }
 
@@ -131,13 +132,18 @@ public final class PlayerProviderImpl implements PlayerProvider {
 
     @Nullable
     @Override
-    public final Player getPlayer(@NonNull String key) {
+    public final Player getPlayer(
+            @NonNull String key
+    ) {
         return getPlayer(DEFAULT_CONFIG, key);
     }
 
     @Nullable
     @Override
-    public final Player getPlayer(@NonNull Config config, @NonNull String key) {
+    public final Player getPlayer(
+            @NonNull Config config,
+            @NonNull String key
+    ) {
         Preconditions.nonNull(config);
         Preconditions.nonEmpty(key);
 
@@ -154,7 +160,10 @@ public final class PlayerProviderImpl implements PlayerProvider {
 
     @NonNull
     @Override
-    public final Player getOrInitPlayer(@NonNull Config config, @NonNull String key) {
+    public final Player getOrInitPlayer(
+            @NonNull Config config,
+            @NonNull String key
+    ) {
         Preconditions.nonNull(config);
         Preconditions.nonEmpty(key);
 
@@ -191,23 +200,26 @@ public final class PlayerProviderImpl implements PlayerProvider {
         return playerNode.getPlayer();
     }
 
-    private Pair<PlayerCreator, PlayerNodePool> getOrInit(Config config) {
+    private Pair<PlayerCreator, PlayerNodePool> getOrInit(
+            Config config
+    ) {
         final PlayerCreator creator = getOrInitCreator(config);
         final PlayerNodePool nodePool = getOrInitNodePool(creator);
 
         return new Pair<>(creator, nodePool);
     }
 
-    private PlayerCreator getOrInitCreator(Config config) {
-        PlayerCreator creator = mConfigCreatorMap.get(config);
+    private PlayerCreator getOrInitCreator(
+            Config config
+    ) {
+        PlayerCreator playerCreator = mConfigCreatorMap.get(config);
 
-        if(creator == null) {
-            creator = MyPlugins.getPlayerCreatorFactory().create(this, config);
-
-            mConfigCreatorMap.put(config, creator);
+        if(playerCreator == null) {
+            playerCreator = MyPlugins.getPlayerCreatorFactory().create(this, config);
+            mConfigCreatorMap.put(config, playerCreator);
         }
 
-        return creator;
+        return playerCreator;
     }
 
     private PlayerNodePool getOrInitNodePool(PlayerCreator creator) {
@@ -222,23 +234,32 @@ public final class PlayerProviderImpl implements PlayerProvider {
         return nodePool;
     }
 
-    private PlayerNodePool getPoolForConfig(Config config) {
+    private PlayerNodePool getPoolForConfig(
+            Config config
+    ) {
         final PlayerCreator creator = mConfigCreatorMap.get(config);
         return ((creator != null) ? mCreatorNodePoolMap.get(creator) : null);
     }
 
-    private PlayerNodePool removePoolForConfig(Config config) {
+    private PlayerNodePool removePoolForConfig(
+            Config config
+    ) {
         final PlayerCreator creator = mConfigCreatorMap.get(config);
         return ((creator != null) ? mCreatorNodePoolMap.remove(creator) : null);
     }
 
     @Override
-    public final boolean hasPlayer(@NonNull String key) {
+    public final boolean hasPlayer(
+            @NonNull String key
+    ) {
         return hasPlayer(DEFAULT_CONFIG, key);
     }
 
     @Override
-    public final boolean hasPlayer(@NonNull Config config, @NonNull String key) {
+    public final boolean hasPlayer(
+            @NonNull Config config,
+            @NonNull String key
+    ) {
         Preconditions.nonNull(config);
         Preconditions.nonEmpty(key);
 
@@ -246,7 +267,9 @@ public final class PlayerProviderImpl implements PlayerProvider {
     }
 
     @Override
-    public final void unregister(@NonNull String key) {
+    public final void unregister(
+            @NonNull String key
+    ) {
         unregister(DEFAULT_CONFIG, key);
     }
 

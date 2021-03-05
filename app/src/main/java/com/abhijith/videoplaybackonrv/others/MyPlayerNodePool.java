@@ -15,10 +15,10 @@ import java.util.Set;
 import static com.abhijith.videoplaybackonrv.util.misc.CollectionUtils.toHashSet;
 
 /**
- * A concrete implementation of the {@link com.abhijith.videoplaybackonrv.others.PlayerNodePool}, used to
+ * A concrete implementation of the {@link PlayerNodePool}, used to
  * manage the {@link PlayerNode}s and corresponding {@link Player}s.
  */
-final class MyPlayerNodePool implements com.abhijith.videoplaybackonrv.others.PlayerNodePool {
+final class MyPlayerNodePool implements PlayerNodePool {
 
     private final int maxSize;
 
@@ -44,7 +44,6 @@ final class MyPlayerNodePool implements com.abhijith.videoplaybackonrv.others.Pl
     public final void add(@NonNull String key, @NonNull Player player) {
         Preconditions.nonEmpty(key);
         Preconditions.nonNull(player);
-
         add(new PlayerNode(player).setKey(key));
     }
 
@@ -205,9 +204,6 @@ final class MyPlayerNodePool implements com.abhijith.videoplaybackonrv.others.Pl
     public final boolean contains(@NonNull String key) {
         return (this.keyPlayerNodeMap.get(key) != null);
     }
-
-
-
 
     private void unbind(PlayerNode playerNode, boolean removeFromPool) {
         final Player player = playerNode.getPlayer();

@@ -37,18 +37,19 @@ public interface MediaSourceBuilder {
     MediaSourceBuilder DEFAULT = new MediaSourceBuilder() {
 
         @NonNull @Override
-        public MediaSource buildMediaSource(@NonNull Context context,
-                                            @NonNull Uri fileUri,
-                                            @Nullable String fileExtension,
-                                            @Nullable Handler handler,
-                                            @NonNull DataSource.Factory manifestDataSourceFactory,
-                                            @NonNull DataSource.Factory mediaDataSourceFactory,
-                                            @Nullable MediaSourceEventListener eventListener) {
+        public MediaSource buildMediaSource(
+                @NonNull Context context,
+                @NonNull Uri fileUri,
+                @Nullable String fileExtension,
+                @Nullable Handler handler,
+                @NonNull DataSource.Factory manifestDataSourceFactory,
+                @NonNull DataSource.Factory mediaDataSourceFactory,
+                @Nullable MediaSourceEventListener eventListener
+        ) {
             @C.ContentType final int type = TextUtils.isEmpty(fileExtension) ? inferContentType(fileUri) : inferContentType("." + fileExtension);
-
             switch(type) {
-
                 case C.TYPE_SS:
+
                     final SsMediaSource ssMediaSource = new SsMediaSource.Factory(
                         new DefaultSsChunkSource.Factory(mediaDataSourceFactory),
                         manifestDataSourceFactory
@@ -147,13 +148,15 @@ public interface MediaSourceBuilder {
      * @return the created {@link MediaSource}
      */
     @NonNull
-    MediaSource buildMediaSource(@NonNull Context context,
-                                 @NonNull Uri fileUri,
-                                 @Nullable String fileExtension,
-                                 @Nullable Handler handler,
-                                 @NonNull DataSource.Factory manifestDataSourceFactory,
-                                 @NonNull DataSource.Factory mediaDataSourceFactory,
-                                 @Nullable MediaSourceEventListener eventListener);
+    MediaSource buildMediaSource(
+            @NonNull Context context,
+            @NonNull Uri fileUri,
+            @Nullable String fileExtension,
+            @Nullable Handler handler,
+            @NonNull DataSource.Factory manifestDataSourceFactory,
+            @NonNull DataSource.Factory mediaDataSourceFactory,
+            @Nullable MediaSourceEventListener eventListener
+    );
 
 
 }

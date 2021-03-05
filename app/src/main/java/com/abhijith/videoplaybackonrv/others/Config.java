@@ -2,7 +2,6 @@ package com.abhijith.videoplaybackonrv.others;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.abhijith.videoplaybackonrv.player.Player;
 import com.abhijith.videoplaybackonrv.player.util.BaseMeter;
 import com.abhijith.videoplaybackonrv.player.util.MediaSourceBuilder;
@@ -13,7 +12,6 @@ import com.google.android.exoplayer2.drm.DrmSessionManager;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.cache.Cache;
-
 import java.util.Arrays;
 
 import static com.abhijith.videoplaybackonrv.util.misc.Preconditions.checkNonNull;
@@ -36,9 +34,6 @@ public final class Config {
     @Nullable public final Cache cache;
     @Nullable public final DataSource.Factory dataSourceFactory;
 
-
-
-
     private Config(Builder builder) {
         this.extensionMode = builder.extensionMode;
         this.meter = builder.meter;
@@ -47,10 +42,8 @@ public final class Config {
         this.drmSessionManagers = builder.drmSessionManagers;
         this.cache = builder.cache;
         this.dataSourceFactory = builder.dataSourceFactory;
+
     }
-
-
-
 
     /**
      * Determines if the {@link Cache} is set.
@@ -59,9 +52,6 @@ public final class Config {
         return (this.cache != null);
     }
 
-
-
-
     /**
      * Determines if the {@link DataSource.Factory} is set.
      */
@@ -69,18 +59,12 @@ public final class Config {
         return (this.dataSourceFactory != null);
     }
 
-
-
-
     /**
      * Determines if the {@link DrmSessionManager}s are set.
      */
     public final boolean hasDrmSessionManagers() {
         return (this.drmSessionManagers.length > 0);
     }
-
-
-
 
     @Override
     public final int hashCode() {
@@ -115,7 +99,6 @@ public final class Config {
         private Cache cache;
         private DataSource.Factory dataSourceFactory;
 
-
         public Builder() {
             this.extensionMode = EXTENSION_RENDERER_MODE_OFF;
             this.meter = new BaseMeter<>(bandwidthMeter, bandwidthMeter);
@@ -126,62 +109,47 @@ public final class Config {
             this.dataSourceFactory = null;
         }
 
-
         public Builder extensionMode(@DefaultRenderersFactory.ExtensionRendererMode int extensionMode) {
             this.extensionMode = extensionMode;
             return this;
         }
-
 
         public Builder meter(@NonNull BaseMeter<?, ?> meter) {
             this.meter = checkNonNull(meter);
             return this;
         }
 
-
         public Builder loadControl(@NonNull LoadControl loadControl) {
             this.loadControl = checkNonNull(loadControl);
             return this;
         }
-
 
         public Builder mediaSourceBuilder(@NonNull MediaSourceBuilder mediaSourceBuilder) {
             this.mediaSourceBuilder = checkNonNull(mediaSourceBuilder);
             return this;
         }
 
-
         public Builder looping(boolean isLooping) {
             return mediaSourceBuilder(isLooping ? MediaSourceBuilder.LOOPING : MediaSourceBuilder.DEFAULT);
         }
-
 
         public Builder drmSessionManagers(@NonNull DrmSessionManager[] drmSessionManagers) {
             this.drmSessionManagers = checkNonNull(drmSessionManagers);
             return this;
         }
 
-
         public Builder cache(@Nullable Cache cache) {
             this.cache = cache;
             return this;
         }
-
 
         public Builder dataSourceFactory(@Nullable DataSource.Factory dataSourceFactory) {
             this.dataSourceFactory = dataSourceFactory;
             return this;
         }
 
-
         public Config build() {
             return new Config(this);
         }
-
-
     }
-
-
-
-
 }

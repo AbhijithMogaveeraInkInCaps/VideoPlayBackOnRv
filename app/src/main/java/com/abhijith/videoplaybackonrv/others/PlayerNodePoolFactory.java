@@ -8,11 +8,11 @@ import androidx.annotation.NonNull;
 public interface PlayerNodePoolFactory {
 
     /**
-     * Creates a new instance of the {@link com.abhijith.videoplaybackonrv.others.PlayerNodePool}.
+     * Creates a new instance of the {@link PlayerNodePool}.
      *
-     * @return the created {@link com.abhijith.videoplaybackonrv.others.PlayerNodePool} instance
+     * @return the created {@link PlayerNodePool} instance
      */
     @NonNull
-    com.abhijith.videoplaybackonrv.others.PlayerNodePool create();
+    PlayerNodePool create();
 
 }
