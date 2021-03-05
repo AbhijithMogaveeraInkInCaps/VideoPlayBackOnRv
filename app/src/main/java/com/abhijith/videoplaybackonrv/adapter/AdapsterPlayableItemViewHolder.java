@@ -45,18 +45,10 @@ import com.google.android.exoplayer2.ui.PlayerView;
  */
 public abstract class AdapsterPlayableItemViewHolder<Data> extends BaseItem.ViewHolder<Data> implements Playable,
         Player.AttachmentStateDelegate, Player.EventListener {
-
-
     public static final String TAG = "AdapsterPlayableItemViewHolder";
-
     private static final float DEFAULT_TRIGGER_OFFSET = 0.5f;
-
-
     public final ViewGroup mParentViewGroup;
     public final PlayerView mPlayerView;
-
-
-
 
     public AdapsterPlayableItemViewHolder(ViewGroup parentViewGroup, View itemView) {
         super(itemView);
